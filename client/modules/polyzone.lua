@@ -1,5 +1,5 @@
 local lib_zones = lib.zones
-local locations = require 'client.modules.store'.locations
+local locations = require 'config'.locations
 local polyzone = {
     isNear = false
 }

@@ -120,7 +120,7 @@ end
 end
 ]]
 --RegisterCommand('editCam', function(f, args)
---    local Store = require 'client.modules.store'
+--    local Store = require 'config'
 --    Camera.createMainCam()
 --    Camera.createCam(Store.decals[args[1]].cam)
 --    SetCamEdit(GetEntityCoords(cache.vehicle))

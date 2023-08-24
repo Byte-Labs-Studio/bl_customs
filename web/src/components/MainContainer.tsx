@@ -11,6 +11,10 @@ import DecalsSvg from './SVG/Decals'
 import { TargetMenuData } from "./type";
 
 
+const upperCase = (text: string) => {
+  return text[0].toUpperCase() + text.slice(1)
+}
+
 const MainContainer: React.FC = () => {
   const { setMenuData, menu } = useContext(CardsContext);
 
@@ -19,6 +23,7 @@ const MainContainer: React.FC = () => {
   const enterClick = useKeyPress('Enter');
   const backspace = useKeyPress('Backspace');
   const [selected, setSelected] = useState<TargetMenuData>({mod: ''})
+  const [cardsCount, setCardsCount] = useState<{total: number, current: number}>({total: 0, current: 0})
 
   useEffect(() => {
     if (backspace) handleClick({mod: 'back'}, menu, setMenuData)
@@ -41,17 +46,21 @@ const MainContainer: React.FC = () => {
   const RenderCards = useMemo(() => {
     let icon = menu.currentMenu === 'decals' && DecalsSvg || menu.currentMenu === 'wheels' && WheelsSvg || menu.currentMenu === 'paint' && (() => Icon(faFillDrip)) || (() => Icon(faCar))
     return menu.data.map((value, index) => {
-      if (value.selected) setSelected({mod: value.id, price: value.price, toggle: value.toggle, applied: value.applied})
+      if (value.selected) {
+        setSelected({mod: value.id, price: value.price, toggle: value.toggle, applied: value.applied})
+        setCardsCount({total: menu.data.length, current: index+1})
+      }
       let label = value.id
       if (typeof value.id === 'number') label = value.label
       return (
-        <Card key={index} icon={value.icon || icon} text={label[0].toUpperCase() + label.slice(1)} selected={value.selected} price={value.price || undefined} applied={value.applied || undefined} yellow={value.id === 'exit'}/>
+        <Card key={index} icon={value.icon || icon} text={upperCase(label)} selected={value.selected} price={value.price || undefined} applied={value.applied || undefined} yellow={value.id === 'exit'}/>
       )
     })
   }, [menu]);
 
   return (
     <div className="customs-wrapper">
+      <div className='cards-swapper'>{upperCase(menu.current)} <p className='cards-count'>{cardsCount.current}/{cardsCount.total}</p></div>
       <div className='cards-wrapper'>
         <div className="flexbox">
           {RenderCards}

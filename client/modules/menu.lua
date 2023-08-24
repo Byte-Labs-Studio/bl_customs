@@ -1,16 +1,16 @@
 local vehicle = require 'client.modules.vehicle'
 local Store = require 'client.modules.store'
+local Config = require 'config'
 local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
 local Interface = require 'client.modules.utils'
-local currentData = Store.data
 local table_contain = lib.table.contains
 
 local function resetMenuData()
     local entity = cache.vehicle
     SetVehicleDoorsLocked(entity , 1)
     FreezeEntityPosition(entity, false)
-    Store.data = { menu = 'main', modType = 'none', stored = {}, preview = false}
+    Store = { menu = 'main', modType = 'none', stored = {}, preview = false}
     camera.destroyCam()
 end
 
@@ -41,7 +41,7 @@ local function getModType(type)
         paint = vehicle.getVehicleColorsTypes,
     }
 
-    return selector[currentData.menu] and selector[currentData.menu](type)
+    return selector[Store.menu] and selector[Store.menu](type)
 end
 
 local function handleMainMenus(menu)
@@ -54,8 +54,8 @@ local function handleMainMenus(menu)
         wheels = vehicle.getVehicleWheels,
         paint = vehicle.getVehicleColors,
         preview = function()
-            currentData.preview = not currentData.preview
-            if currentData.preview then
+            Store.preview = not Store.preview
+            if Store.preview then
                 camera.destroyCam()
             else
                 camera.createMainCam()
@@ -71,7 +71,7 @@ local function applyMod(menu)
     if menu.type == 51 then -- plate index
         SetVehicleNumberPlateTextIndex(entity, menu.index)
     else
-        SetVehicleMod(entity, menu.type, menu.index, currentData.stored.customTyres)
+        SetVehicleMod(entity, menu.type, menu.index, Store.stored.customTyres)
     end
     --if menu.type == 14 then -- do a special thing if you selected a mod
     --end
@@ -97,11 +97,11 @@ local function applyColorMod(menu)
 end
 
 local function handleMod(modIndex)
-    currentData.stored.appliedMods = {modType = currentData.modType, mod = modIndex}
-    if currentData.menu == 'paint' then
-        applyColorMod({ colorType = currentData.modType, modIndex = modIndex })
+    Store.stored.appliedMods = {modType = Store.modType, mod = modIndex}
+    if Store.menu == 'paint' then
+        applyColorMod({ colorType = Store.modType, modIndex = modIndex })
     else
-        applyMod({ type = currentData.menu == 'wheels' and 23 or Store.decals[currentData.modType].id, index = modIndex })
+        applyMod({ type = Store.menu == 'wheels' and 23 or Config.decals[Store.modType].id, index = modIndex })
     end
 end
 
@@ -111,25 +111,25 @@ local function handleMenuClick(data)
     if clickedCard == nil then return end
     camera.switchCam()
     if data.isBack then
-        local storedData = currentData.stored
+        local storedData = Store.stored
         if not storedData.boughtMods or storedData.appliedMods and storedData.appliedMods.modType ~= storedData.boughtMods.modType or storedData.appliedMods.mod ~= storedData.boughtMods.mod then
-            if currentData.menu == 'wheels' then
-                SetVehicleWheelType(cache.vehicle, currentData.stored.currentWheelType)
+            if Store.menu == 'wheels' then
+                SetVehicleWheelType(cache.vehicle, Store.stored.currentWheelType)
             end
             handleMod(storedData.currentMod)
         end
     end
     if menuType == 'menu' then
-        currentData.menu = clickedCard
+        Store.menu = clickedCard
     elseif menuType == 'modType' then
-        currentData.modType = currentData.menu == 'paint' and (table_contain(Store.colors.types, clickedCard) and clickedCard or currentData.modType) or clickedCard
+        Store.modType = Store.menu == 'paint' and (table_contain(Config.colors.types, clickedCard) and clickedCard or Store.modType) or clickedCard
     end
 
     return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)
 end
 
 local function buyMod(data)
-    local storedData = currentData.stored
+    local storedData = Store.stored
 
     if storedData.currentMod == data.mod then 
         lib.notify({
@@ -139,16 +139,16 @@ local function buyMod(data)
         })
         return end
     print(data.price)
-    storedData.boughtMods = {price = data.price, mod = data.mod, modType = currentData.modType}
+    storedData.boughtMods = {price = data.price, mod = data.mod, modType = Store.modType}
     storedData.currentMod = data.mod
     return true
 end
 
 local function toggleMod(data)
     print(data.price)
-    if currentData.menu == 'wheels' then
+    if Store.menu == 'wheels' then
         vehicle.toggleCustomTyres(data.toggle)
-    elseif currentData.modType == 'Neon' then
+    elseif Store.modType == 'Neon' then
         vehicle.enableNeonColor({modIndex = data.mod, toggle = data.toggle})
     end
     return true

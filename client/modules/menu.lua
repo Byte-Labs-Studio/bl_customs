@@ -128,24 +128,31 @@ local function handleMenuClick(data)
     return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)
 end
 
+local function removeMoney(amount)
+    return lib.callback.await('bl_customs:canAffordMod', false, amount)
+end
+
 local function buyMod(data)
     local storedData = Store.stored
 
     if storedData.currentMod == data.mod then 
-        lib.notify({
-            title = 'Customs',
-            description = 'You have this mod already',
-            type = 'warning'
-        })
-        return end
-    print(data.price)
+        lib.notify({title = 'Customs',description = 'You have this mod already',type = 'warning'})
+        return 
+    end
+    if not removeMoney(data.price) then 
+        lib.notify({title = 'Customs',description = 'You\'re broke',type = 'warning'})
+        return 
+    end
     storedData.boughtMods = {price = data.price, mod = data.mod, modType = Store.modType}
     storedData.currentMod = data.mod
     return true
 end
 
 local function toggleMod(data)
-    print(data.price)
+    if not removeMoney(data.price) then 
+        lib.notify({title = 'Customs',description = 'You\'re broke',type = 'warning'})
+        return 
+    end
     if Store.menu == 'wheels' then
         vehicle.toggleCustomTyres(data.toggle)
     elseif Store.modType == 'Neon' then

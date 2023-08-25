@@ -1,9 +1,11 @@
 local lib_zones = lib.zones
-local locations = require 'client.modules.store'.locations
+local locations = require 'config'.locations
 local polyzone = {
     isNear = false
 }
 
+---comment
+---@param custom {locData: vector4}
 local function onEnter(custom)
     lib.showTextUI('Customs')
     polyzone.pos = custom.locData

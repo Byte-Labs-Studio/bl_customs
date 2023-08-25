@@ -33,7 +33,8 @@ function Camera.createMainCam()
     SetCamRot(mainCam, -19.500000, -0.000000, 219.000000, 0)
 end
 
-
+---comment
+---@param data {off: vector3, rot: vector3}
 function Camera.createCam(data)
     cam = cam or CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
     local entityPos = GetEntityCoords(cache.vehicle)
@@ -120,7 +121,7 @@ end
 end
 ]]
 --RegisterCommand('editCam', function(f, args)
---    local Store = require 'client.modules.store'
+--    local Store = require 'config'
 --    Camera.createMainCam()
 --    Camera.createCam(Store.decals[args[1]].cam)
 --    SetCamEdit(GetEntityCoords(cache.vehicle))

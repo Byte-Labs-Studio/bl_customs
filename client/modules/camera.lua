@@ -2,6 +2,58 @@ local Camera = {}
 local cam
 local mainCam
 local shouldUpdate = false
+local camDistance = 0.5
+local angleY = 0.0
+local angleZ = 0.0
+local math_clamp = math.clamp
+local math_cos = math.cos
+local math_sin = math.sin
+local targetCoords
+
+local function cos(degrees)
+    return math_cos(degrees * math.pi / 180)
+end
+
+local function sin(degrees)
+    return math_sin(degrees * math.pi / 180)
+end
+
+local function getOffCoords()
+    return vec3(
+        ((cos(angleZ) * cos(angleY)) + (cos(angleY) * cos(angleZ))) / 2 * camDistance,
+        ((sin(angleZ) * cos(angleY)) + (cos(angleY) * sin(angleZ))) / 2 * camDistance,
+        ((sin(angleY))) * camDistance
+    )
+end
+
+local function SetCamPosition(mouseX, mouseY)
+    if not targetCoords then return end
+    local mouseX = mouseX or 0.0 --and mouseX * 5.0 or 0.0
+    local mouseY = mouseY or 0.0 --and mouseY * 5.0 or 0.0
+
+    angleZ = angleZ - mouseX -- around Z axis (left / right)
+    angleY = angleY + mouseY -- up / down
+    angleY = math_clamp(angleY, 0.0, 89.0) -- >=90 degrees will flip the camera, < 0 is underground
+
+    local offset = getOffCoords()
+    local camPos = vec3(targetCoords.x + offset.x, targetCoords.y + offset.y, targetCoords.z + offset.z)
+    SetCamCoord(cam, camPos.x, camPos.y, camPos.z)
+    PointCamAtCoord(cam, targetCoords.x, targetCoords.y, targetCoords.z)
+end
+
+function Camera.handleNuiCamera(data)
+    local coord = data.coords
+
+    if data.type == 'wheel' then
+        local distance = camDistance + coord
+        if distance < 0.1 then return end
+        if distance > 7.0 then return end
+        camDistance = distance
+        SetCamPosition()
+    else
+        SetCamPosition(coord.x, coord.y)
+    end
+end
 
 function Camera.destroyCam()
     RenderScriptCams(false, true, 1000)
@@ -13,13 +65,14 @@ end
 
 function Camera.switchCam()
     if not shouldUpdate then return end
+    local entity = cache.vehicle
     for i = 0, 5 do
-        SetVehicleDoorShut(cache.vehicle, i, false) -- will open every door from 0-5
+        SetVehicleDoorShut(entity, i, false) -- will open every door from 0-5
     end
     shouldUpdate = false
     SetCamActiveWithInterp(mainCam, cam, 400)
     Wait(400)
-    local entityPos = GetEntityCoords(cache.vehicle)
+    local entityPos = GetEntityCoords(entity)
     SetCamCoord(cam, entityPos.x + -3.200000, entityPos.y + 3.400000, entityPos.z + 2.100000)
     SetCamRot(cam, -19.500000, -0.000000, 219.000000, 0)
 end
@@ -33,15 +86,23 @@ function Camera.createMainCam()
     SetCamRot(mainCam, -19.500000, -0.000000, 219.000000, 0)
 end
 
----comment
----@param data {off: vector3, rot: vector3}
-function Camera.createCam(data)
-    cam = cam or CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-    local entityPos = GetEntityCoords(cache.vehicle)
+RegisterCommand('getheading', function()
+    print(angleZ)
+    print(angleY)
+end)
 
-    SetCamCoord(cam, entityPos.x + data.off.x, entityPos.y + data.off.y, entityPos.z + data.off.z)
-    SetCamRot(cam, data.rot.x, data.rot.y, data.rot.z, 0)
-    SetCamActiveWithInterp(cam, mainCam, 500)
+---comment
+---@param data {off: vector3, angle: vector2}
+function Camera.createCam(data)
+    local entityPos = GetEntityCoords(cache.vehicle)
+    local offset = data.off
+    local coords = vector3(entityPos.x + offset.x, entityPos.y + offset.y, entityPos.z + offset.z)
+    targetCoords = coords
+    angleZ, angleY = data.angle and data.angle.x or angleZ, data.angle and data.angle.y or angleY
+    cam = cam or CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 50.0, false, 0)
+    
+    SetCamPosition()
+    SetCamActiveWithInterp(cam, mainCam, 500, true, true)
     shouldUpdate = true
 end
 

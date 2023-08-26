@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+#root {
+  height: 100%
+}
+
 :root {
   --bg-color: #282c34;
   --text-color: #f7f7f9;
@@ -30,63 +39,64 @@
   display: flex;
   justify-content: center;
   align-items: end;
-  height: 100%;
-  width: 100%;
   text-align: center;
-  overflow: auto;
   font-family: 'Rubik', sans-serif;
 }
 
+
+.cards-swapper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: absolute;
+  height: 30px;
+  background-color: var(--bg-color);
+  bottom: 14.5rem;
+  padding: 2px 2px 2px 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+.camera-handle{
+  height: 100vh;
+  width: 100vw;
+}
+
+.cards-wrapper {
+  bottom: 8%;
+  height: 14%;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
 .cards-count {
+  position: relative;
   background-color: white;
   width: auto;
   height: 20px;
   color: var(--bg-color);
   padding: 2px 2px 1px 2px;
-  position: relative;
   border-radius: 5px;
   font-size: 15px;
   font-weight: 900;
   margin-left: 10px;
 }
 
-.cards-swapper {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-
-  height: 30px;
-  background-color: var(--bg-color);
-  position: absolute;
-  bottom: 14.5rem;
-  left: 30rem;
-  padding: 2px 2px 2px 5px;
-  border-radius: 5px;
-  color: white;
-}
-
-.cards-wrapper {
-  display: flex;
-  width: 100%;
-  position: absolute;
-  bottom: 8%;
-  align-items: center;
-  height: 14%;
-  justify-content: center;
-}
-
 .flexbox {
   display: flex;
-  gap: 10px;
+  gap: 13px;
   overflow-y: hidden;
   overflow-x: auto;
-  padding: 10px 3px 10px 3px;
+  padding:10px;
   margin-left: 3px;
   align-items: center;
-  width: 50%;
+  width: auto;
   height: 100%;
+  max-width: 50%;
 }
-
 
 .cards {
   display: flex;
@@ -142,8 +152,7 @@
 
 .cardsHover {
   background-color: white;
-  transform: scale(1.15);
-  margin: 0 10px 0 10px;
+  transform: scale(1.10);
   outline: solid var(--highlight-color) 2px;
 }
 

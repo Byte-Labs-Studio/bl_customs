@@ -24,7 +24,7 @@ local function showMenu(show)
     end
     local entity = cache.vehicle
     if not poly.isNear or not entity then return end
-    Interface.SendReactMessage('setVisible', true, true, true)
+    Interface.SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
     SetVehicleAutoRepairDisabled(entity, true)
@@ -205,6 +205,11 @@ end)
 
 RegisterNUICallback('toggleMod', function(data, cb)
     cb(toggleMod(data))
+end)
+
+RegisterNUICallback("cameraHandle", function(data, cb)
+    camera.handleNuiCamera(data)
+    cb(1)
 end)
 
 return showMenu

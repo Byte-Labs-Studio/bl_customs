@@ -4,22 +4,15 @@ local currentResourceName = GetCurrentResourceName()
 
 local debugIsEnabled = GetConvarInt(('%s-debugMode'):format(currentResourceName), 0) == 1
 
-function Utils.SendReactMessage(action, data, mouse, input)
+function Utils.SendReactMessage(action, data)
   SendNUIMessage({
     action = action,
     data = data
   })
   if action ~= 'setVisible' then return end
 
-  if input then
-    SetNuiFocusKeepInput(data)
-  end
-
-  if mouse then
-    SetNuiFocus(data, false)
-  else
-    SetNuiFocus(data, data)
-  end
+  SetNuiFocusKeepInput(data)
+  SetNuiFocus(data, data)
 end
 
 function Utils.debugPrint(...)

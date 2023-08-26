@@ -20,7 +20,7 @@ interface VisibilityProviderValue {
 
 // This should be mounted at the top level of your application, it is currently set to
 // apply a CSS visibility value. If this is non-performant, this should be customized.
-export const VisibilityProvider: React.FC<{ children: React.ReactNode, removal?: boolean }> = ({ children, removal }) => {
+export const VisibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [visible, setVisible] = useState(false)
 
   useNuiEvent<boolean>('setVisible', setVisible)
@@ -38,7 +38,6 @@ export const VisibilityProvider: React.FC<{ children: React.ReactNode, removal?:
     }
 
     window.addEventListener("keydown", keyHandler)
-
     return () => window.removeEventListener("keydown", keyHandler)
   }, [visible])
 
@@ -49,16 +48,10 @@ export const VisibilityProvider: React.FC<{ children: React.ReactNode, removal?:
         setVisible
       }}
     >
-    {removal ? (
-        visible ? (
-          <div style={{height: '100%'}} >{children}</div>
-        ) : null
-      ) : (
-        <div style={{ visibility: visible ? 'visible' : 'hidden', height: '100%' }}>
-          {children}
-        </div>
-      )}
-  </VisibilityCtx.Provider>)
+      {visible ? (
+        <div style={{height: '100%'}} >{children}</div>
+      ) : null}
+    </VisibilityCtx.Provider>)
 }
 
 export const useVisibility = () => useContext<VisibilityProviderValue>(VisibilityCtx as Context<VisibilityProviderValue>)

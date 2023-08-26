@@ -1,6 +1,6 @@
 return {
     framework = {
-        name = 'qbus',
+        name = 'qb-core',
         type = 'bank'
     },
     colorCams = {

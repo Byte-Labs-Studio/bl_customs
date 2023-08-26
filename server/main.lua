@@ -4,7 +4,7 @@ local config = require 'config'
 
 lib.callback.register('bl_customs:canAffordMod', function(source, amount)
     local frameworkData = config.framework
-    if frameworkData.name == 'qbus' then
+    if frameworkData.name == 'qb-core' then
         local QBCore = exports['qb-core']:GetCoreObject()
         local player = QBCore.Functions.GetPlayer(source)
         local money = player.PlayerData.money[frameworkData.type]

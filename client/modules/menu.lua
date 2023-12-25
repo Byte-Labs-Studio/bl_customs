@@ -160,11 +160,11 @@ local function buyMod(data)
 
     if storedData.currentMod == data.mod then
         lib.notify({ title = 'Customs', description = 'You have this mod already', type = 'warning' })
-        return
+        return false
     end
     if not removeMoney(data.price) then
         lib.notify({ title = 'Customs', description = 'You\'re broke', type = 'warning' })
-        return
+        return false
     end
     storedData.boughtMods = { price = data.price, mod = data.mod, modType = Store.modType }
     storedData.currentMod = data.mod
@@ -177,7 +177,7 @@ end
 local function toggleMod(data)
     if not removeMoney(data.price) then
         lib.notify({ title = 'Customs', description = 'You\'re broke', type = 'warning' })
-        return
+        return false
     end
     if Store.menu == 'wheels' then
         vehicle.toggleCustomTyres(data.toggle)

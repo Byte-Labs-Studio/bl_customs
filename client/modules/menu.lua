@@ -64,8 +64,10 @@ local function handleMainMenus(menu)
         preview = function()
             Store.preview = not Store.preview
             if Store.preview then
+                SetNuiFocus(true, false)
                 camera.destroyCam()
             else
+                SetNuiFocus(true, true)
                 camera.createMainCam()
             end
         end,

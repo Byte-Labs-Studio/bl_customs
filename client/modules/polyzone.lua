@@ -7,7 +7,7 @@ local polyzone = {
 ---comment
 ---@param custom {locData: vector4}
 local function onEnter(custom)
-    lib.showTextUI('Customs')
+    lib.showTextUI('[G] - Customs')
     polyzone.pos = custom.locData
     polyzone.isNear = true
 end

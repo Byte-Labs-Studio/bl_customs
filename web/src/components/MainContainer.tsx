@@ -60,7 +60,10 @@ const MainContainer: React.FC = () => {
 
   return (
     <div className="customs-wrapper">
-      <div className='cards-swapper'>{upperCase(menu.current)} <p className='cards-count'>{cardsCount.current}/{cardsCount.total}</p></div>
+      <div className='cards-swapper'>
+        {upperCase(menu.current)} 
+        <p className='cards-count'>{cardsCount.current}/{cardsCount.total}</p>
+      </div>
       <div className='cards-wrapper'>
         <div className="flexbox">
           {RenderCards}

@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sen:wght@400;500;600;700;800&display=swap');
 
 body {
   margin: 0;
   height: 100vh;
+  font-family: 'Sen', sans-serif;
 }
 
 #root {
@@ -40,7 +41,7 @@ body {
   justify-content: center;
   align-items: end;
   text-align: center;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Sen', sans-serif;
 }
 
 
@@ -78,7 +79,7 @@ body {
   width: auto;
   height: 20px;
   color: var(--bg-color);
-  padding: 2px 2px 1px 2px;
+  padding: 2px 2px 2px 5px;
   border-radius: 5px;
   font-size: 15px;
   font-weight: 900;

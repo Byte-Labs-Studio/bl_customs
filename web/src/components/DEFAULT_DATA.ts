@@ -10,7 +10,7 @@ const default_data = { type: 'menu', current: 'main', previous: 'main', data: [
     {id: 'decals', label: 'Decals', icon: DecalsSvg},
     {id: 'wheels', label: 'Wheels', icon: WheelsSvg},
     {id: 'paint', label: 'Paint', icon: () => Icon(faFillDrip)},
-    {id: 'exit', label: 'Exit', icon: () => Icon(faRightFromBracket)},
+    {id: 'exit', label: 'Exit', icon: () => Icon(faRightFromBracket, undefined, true)},
 ], currentMenu: 'main'} as MenuProps
 
 export default default_data

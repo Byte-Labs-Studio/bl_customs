@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useEffect } from 'react';
 import { CardProps } from "./type";
-import {faCheck} from '@fortawesome/free-solid-svg-icons'
-import {Icon} from './Icon'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { Icon } from './Icon'
 
 
 const Card: React.FC<CardProps> = React.memo(({ icon, text, style, yellow, selected, price, applied }) => {
@@ -17,11 +17,11 @@ const Card: React.FC<CardProps> = React.memo(({ icon, text, style, yellow, selec
   return (
     <div ref={selected ? cardRef : null} className={'cards ' + (yellow ? 'yellow ' : '') + (selected ? 'cardsHover' : '')} style={cardStyle}>
       {applied && <span className='card-applied'>{Icon(faCheck, 'sm')}</span>}
-      {price && <p className='card-price' style={{color: selected ? '#282c34' : 'white'}}>${price}</p>}
+      {price && <p className='card-price' style={{ color: selected ? '#282c34' : 'white' }}>${price}</p>}
       <div className='cards-center-content'>
         {icon()}
         <p className='card-text'>
-        {text}
+          {text}
         </p>
       </div>
     </div>

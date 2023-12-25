@@ -107,7 +107,6 @@ function Camera.createCam(data)
 end
 
 -- to edit parts cams 
-
 --[[local function SetCamEdit(bonePos)
     local offsetEnabled = false
     local off = GetCamCoord(cam)

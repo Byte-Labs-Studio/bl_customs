@@ -1,8 +1,5 @@
 return {
-    framework = {
-        name = 'qb-core',
-        type = 'bank'
-    },
+    moneyType = 'bank',
     colorCams = {
         dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
         wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },

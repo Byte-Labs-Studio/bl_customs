@@ -5,12 +5,20 @@ game 'gta5'
 
 ui_page 'web/build/index.html'
 
-client_script "client/init.lua"
-shared_scripts {
-  'config.lua',
-  '@ox_lib/init.lua'
+client_scripts {
+  "@bl_bridge/imports/client.lua",
+  "client/init.lua"
 }
 
+server_scripts {
+  "@bl_bridge/imports/server.lua",
+  "server/main.lua"
+}
+
+shared_scripts {
+  '@ox_lib/init.lua',
+  'config.lua',
+}
 
 files {
   'client/modules/*.lua',

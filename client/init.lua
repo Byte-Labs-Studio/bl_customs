@@ -1,7 +1,6 @@
 if not lib then return end
 
 local showMenu = require 'client.modules.menu'
-
 CreateThread(function()
     lib.addKeybind({
         name = 'customs',
@@ -11,4 +10,4 @@ CreateThread(function()
             showMenu(true)
         end
     })
- end)
+end)

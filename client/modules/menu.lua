@@ -17,7 +17,7 @@ end
 ---comment
 ---@param show boolean
 local function showMenu(show)
-    if not show then 
+    if not show then
         Interface.SendReactMessage('setVisible', false)
         resetMenuData()
         return
@@ -185,7 +185,7 @@ local function toggleMod(data)
 end
 
 RegisterNUICallback('hideFrame', function(_, cb)
-    resetMenuData()
+    showMenu(false)
     cb({})
 end)
 

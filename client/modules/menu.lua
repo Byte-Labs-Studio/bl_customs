@@ -63,13 +63,18 @@ local function handleMainMenus(menu)
         paint = vehicle.getVehicleColors,
         preview = function()
             Store.preview = not Store.preview
+            local text = ''
             if Store.preview then
+                text = 'Preview Mode: On'
                 SetNuiFocus(true, false)
                 camera.destroyCam()
             else
+                text = 'Preview Mode: Off'
                 SetNuiFocus(true, true)
                 camera.createMainCam()
             end
+
+            lib.notify({ title = 'Customs', description = text, type = 'inform' })
         end,
     }
 

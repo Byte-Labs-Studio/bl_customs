@@ -28,11 +28,11 @@ end
 
 local function SetCamPosition(mouseX, mouseY)
     if not targetCoords then return end
-    local mouseX = mouseX or 0.0 --and mouseX * 5.0 or 0.0
-    local mouseY = mouseY or 0.0 --and mouseY * 5.0 or 0.0
+    local mouseX = mouseX or 0.0           --and mouseX * 5.0 or 0.0
+    local mouseY = mouseY or 0.0           --and mouseY * 5.0 or 0.0
 
-    angleZ = angleZ - mouseX -- around Z axis (left / right)
-    angleY = angleY + mouseY -- up / down
+    angleZ = angleZ - mouseX               -- around Z axis (left / right)
+    angleY = angleY + mouseY               -- up / down
     angleY = math_clamp(angleY, 0.0, 89.0) -- >=90 degrees will flip the camera, < 0 is underground
 
     local offset = getOffCoords()
@@ -99,14 +99,15 @@ function Camera.createCam(data)
     local coords = vector3(entityPos.x + offset.x, entityPos.y + offset.y, entityPos.z + offset.z)
     targetCoords = coords
     angleZ, angleY = data.angle and data.angle.x or angleZ, data.angle and data.angle.y or angleY
-    cam = cam or CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 50.0, false, 0)
-    
+    cam = cam or
+    CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 50.0, false, 0)
+
     SetCamPosition()
     SetCamActiveWithInterp(cam, mainCam, 500, true, true)
     shouldUpdate = true
 end
 
--- to edit parts cams 
+-- to edit parts cams
 --[[local function SetCamEdit(bonePos)
     local offsetEnabled = false
     local off = GetCamCoord(cam)
@@ -155,7 +156,7 @@ end
                 offY += 0.1
                 SetCamCoord(cam, offX, offY, offZ)
             end
-        elseif IsControlPressed(0, 208) then -- page up 
+        elseif IsControlPressed(0, 208) then -- page up
             if offsetEnabled then
                 offZ += 0.1
                 SetCamCoord(cam, offX, offY, offZ)

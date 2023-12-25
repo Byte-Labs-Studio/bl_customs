@@ -8,9 +8,9 @@ local table_contain = lib.table.contains
 
 local function resetMenuData()
     local entity = cache.vehicle
-    SetVehicleDoorsLocked(entity , 1)
+    SetVehicleDoorsLocked(entity, 1)
     FreezeEntityPosition(entity, false)
-    Store = { menu = 'main', modType = 'none', stored = {}, preview = false}
+    Store = { menu = 'main', modType = 'none', stored = {}, preview = false }
     camera.destroyCam()
 end
 
@@ -32,7 +32,7 @@ local function showMenu(show)
     SetEntityHeading(entity, coords.w)
     SetEntityCoords(entity, coords.x, coords.y, coords.z)
     FreezeEntityPosition(entity, true)
-    SetVehicleDoorsLocked(entity , 4)
+    SetVehicleDoorsLocked(entity, 4)
     camera.createMainCam()
 end
 
@@ -111,7 +111,7 @@ end
 ---comment
 ---@param modIndex number
 local function handleMod(modIndex)
-    Store.stored.appliedMods = {modType = Store.modType, mod = modIndex}
+    Store.stored.appliedMods = { modType = Store.modType, mod = modIndex }
     if Store.menu == 'paint' then
         applyColorMod({ colorType = Store.modType, modIndex = modIndex })
     else
@@ -139,7 +139,8 @@ local function handleMenuClick(data)
     if menuType == 'menu' then
         Store.menu = clickedCard
     elseif menuType == 'modType' then
-        Store.modType = Store.menu == 'paint' and (table_contain(Config.colors.types, clickedCard) and clickedCard or Store.modType) or clickedCard
+        Store.modType = Store.menu == 'paint' and
+        (table_contain(Config.colors.types, clickedCard) and clickedCard or Store.modType) or clickedCard
     end
 
     return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)
@@ -155,15 +156,15 @@ end
 local function buyMod(data)
     local storedData = Store.stored
 
-    if storedData.currentMod == data.mod then 
-        lib.notify({title = 'Customs',description = 'You have this mod already',type = 'warning'})
-        return 
+    if storedData.currentMod == data.mod then
+        lib.notify({ title = 'Customs', description = 'You have this mod already', type = 'warning' })
+        return
     end
-    if not removeMoney(data.price) then 
-        lib.notify({title = 'Customs',description = 'You\'re broke',type = 'warning'})
-        return 
+    if not removeMoney(data.price) then
+        lib.notify({ title = 'Customs', description = 'You\'re broke', type = 'warning' })
+        return
     end
-    storedData.boughtMods = {price = data.price, mod = data.mod, modType = Store.modType}
+    storedData.boughtMods = { price = data.price, mod = data.mod, modType = Store.modType }
     storedData.currentMod = data.mod
     return true
 end
@@ -172,14 +173,14 @@ end
 ---@param data {price: number, toggle:boolean, mod:number}
 ---@return boolean|nil
 local function toggleMod(data)
-    if not removeMoney(data.price) then 
-        lib.notify({title = 'Customs',description = 'You\'re broke',type = 'warning'})
-        return 
+    if not removeMoney(data.price) then
+        lib.notify({ title = 'Customs', description = 'You\'re broke', type = 'warning' })
+        return
     end
     if Store.menu == 'wheels' then
         vehicle.toggleCustomTyres(data.toggle)
     elseif Store.modType == 'Neon' then
-        vehicle.enableNeonColor({modIndex = data.mod, toggle = data.toggle})
+        vehicle.enableNeonColor({ modIndex = data.mod, toggle = data.toggle })
     end
     return true
 end

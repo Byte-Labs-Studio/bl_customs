@@ -5,13 +5,13 @@ return {
         wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
     },
     locations = {
-        { pos = vector4(727.74, -1088.95, 22.17, 100.0),       vehHeading = 90.0 },
-        { pos = vector4(-206.109, -1328.886, 30.67899, 100.0), vehHeading = 90.0 },
-        { pos = vector4(868.22, -1350.14, 25.97, 100.0),       vehHeading = 90.0 },
-        { pos = vector4(450.25, -975.71, 25.7, 100.0),         vehHeading = 90.0 },
-        { pos = vector4(110.8, 6626.46, 31.89, 100.0),         vehHeading = 90.0 },
-        { pos = vector4(1695.14, 3588.98, 35.29, 100.0),       vehHeading = 90.0 },
-        { pos = vector4(-1269.103, -3376.59, 13.94014, 100.0), vehHeading = 90.0 },
+        { pos = vector4(727.74, -1088.95, 22.17, 90.0) },
+        { pos = vector4(-206.109, -1328.886, 30.67899, 90.0), },
+        { pos = vector4(868.22, -1350.14, 25.97, 90.0), },
+        { pos = vector4(450.25, -975.71, 25.7, 90.0), },
+        { pos = vector4(110.8, 6626.46, 31.89, 90.0), },
+        { pos = vector4(1695.14, 3588.98, 35.29, 90.0), },
+        { pos = vector4(-1269.103, -3376.59, 13.94014, 90.0), },
     },
     colors = {
         types = {
@@ -34,17 +34,17 @@ return {
         },
         color = {
             Neons = {
-                {label = 'Left', id = 0, selected = true, price = 200, toggle = true},
-                {label = 'Right ', id = 1, price = 200, toggle = true},
-                {label = 'Front ', id = 2, price = 200, toggle = true},
-                {label = 'Back', id = 3, price = 200, toggle = true},
-                {label = 'Colors', id = 'Neon Colors'},
+                { label = 'Left',   id = 0,            selected = true, price = 200,  toggle = true },
+                { label = 'Right ', id = 1,            price = 200,     toggle = true },
+                { label = 'Front ', id = 2,            price = 200,     toggle = true },
+                { label = 'Back',   id = 3,            price = 200,     toggle = true },
+                { label = 'Colors', id = 'Neon Colors' },
             },
             WindowsTint = {
-                {price = 200, label = "Default", id = 0},
-                {price = 200, label = "Lightsmoke", id = 3},
-                {price = 200, label = "Darksmoke", id = 2},
-                {price = 200, label = "Pure Black", id = 1},
+                { price = 200, label = "Default",    id = 0 },
+                { price = 200, label = "Lightsmoke", id = 3 },
+                { price = 200, label = "Darksmoke",  id = 2 },
+                { price = 200, label = "Pure Black", id = 1 },
             },
             TyreSmoke = {
                 { price = 200, label = "White",         rgb = { 222, 222, 255 } },
@@ -205,88 +205,280 @@ return {
     },
     -- highest price | means the last mod of spoiler (for ex) gonna cost $2000 / if you want to make the price higher or lower just increase price then all spoiler mods gonna price increase
     decals = {
-        Spoiler = { id = 0, price = 2000,
-            cam = { angle = vec2(-38.25, 12.62), off = vec3(2.800061, -1.699902, 1.000000) } },
-        Skirt = { id = 3, price = 2000,
-            cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) } },
-        Exhaust = { id = 4, price = 2000,
-            cam = { angle = vec2(-0.875, 7.87), off = vec3(3.099988, 0.000073, 0.000000) } },
-        Chassis = { id = 5, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Grill = { id = 6, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-2.900037, 0.000049, 0.300000) } },
-        Bonnet = { id = 7, price = 2000,
-            cam = { angle = vec2(163.5, 19.635), off = vec3(-2.900012, 0.700024, 1.300000) } },
-        Wing = { id = 8, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(2.599976, 1.800000, 1.600000) } },
-        Roof = { id = 10, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-0.700049, 0.899951, 1.900000) } },
-        Horn = { id = 14, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Nitrous = { id = 17, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Subwoofer = { id = 19, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Seats = { id = 32, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Steering = { id = 33, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(0.100012, -0.300000, 0.600001) } },
-        Knob = { id = 34, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Plaque = { id = 35, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Ice = { id = 36, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Trunk = { id = 37, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Hydro = { id = 38, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        Lightbar = { id = 49, price = 2000,
-            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Enginebay 1'] = { id = 39, price = 2000, cam = { door = 4, angle = vec2(127.125, 33.0),
-            off = vec3(-2.400012, 0.000024, 1.000000) } },
-        ['Enginebay 2'] = { id = 40, price = 2000, cam = { door = 4, angle = vec2(127.125, 33.0),
-            off = vec3(-2.400012, 0.000024, 1.000000) } },
-        ['Enginebay 3'] = { id = 41, price = 2000, cam = { door = 4, angle = vec2(127.125, 33.0),
-            off = vec3(-2.400012, 0.000024, 1.000000) } },
-        ['Chassis 2'] = { id = 42, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-2.400012, 1.200024, 0.600000) } },
-        ['Chassis 3'] = { id = 43, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-2.900012, -0.099976, 0.600000) } },
-        ['Chassis 4'] = { id = 44, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-0.800012, 1.000024, 1.400000) } },
-        ['Chassis 5'] = { id = 45, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.100024, 0.800024, 0.000000) } },
-        ['L Door'] = { id = 46, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['R Door'] = { id = 47, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Livery Mod'] = { id = 48, price = 2000, cam = { angle = vec2(130.5, 19.125),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Front Bumper'] = { id = 1, price = 2000, cam = { angle = vec2(157.75, 1.125),
-            off = vec3(-3.100024, 0.800024, 0.000000) } },
-        ['Rear Bumper'] = { id = 2, price = 2000, cam = { angle = vec2(-3.25, 0.0),
-            off = vec3(3.900037, 0.000073, 0.100000) } },
-        ['Wing 2'] = { id = 9, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(2.199975, 0.200000, 1.600000) } },
-        ['Rear Wheels'] = { id = 24, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Plate holder'] = { id = 25, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.100024, 0.800024, 0.000000) } },
-        ['Plate vanity'] = { id = 26, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-2.900037, 0.000049, 0.300000) } },
-        ['Interior 1'] = { id = 27, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Interior 2'] = { id = 28, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-3.200000, 3.400000, 2.100000) } },
-        ['Interior 3'] = { id = 29, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(-1.000012, 2.800025, 1.400000) } },
-        ['Interior 4'] = { id = 30, price = 2000, cam = { angle = vec2(127.125, 33.0),
-            off = vec3(0.199988, 0.000024, 0.700000) } },
-        ['Interior 5'] = { id = 31, price = 2000, cam = { door = 0, angle = vec2(127.125, 33.0),
-            off = vec3(0.399988, -1.199976, 0.400000) } },
-        ['Plate Index'] = { id = 51, price = 2000, cam = { angle = vec2(178.62, 17.25),
-            off = vec3(-2.900037, 0.000049, 0.300000)},
+        Spoiler = {
+            id = 0,
+            price = 2000,
+            cam = { angle = vec2(-38.25, 12.62), off = vec3(2.800061, -1.699902, 1.000000) }
+        },
+        Skirt = {
+            id = 3,
+            price = 2000,
+            cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) }
+        },
+        Exhaust = {
+            id = 4,
+            price = 2000,
+            cam = { angle = vec2(-0.875, 7.87), off = vec3(3.099988, 0.000073, 0.000000) }
+        },
+        Chassis = {
+            id = 5,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Grill = {
+            id = 6,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-2.900037, 0.000049, 0.300000) }
+        },
+        Bonnet = {
+            id = 7,
+            price = 2000,
+            cam = { angle = vec2(163.5, 19.635), off = vec3(-2.900012, 0.700024, 1.300000) }
+        },
+        Wing = {
+            id = 8,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(2.599976, 1.800000, 1.600000) }
+        },
+        Roof = {
+            id = 10,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-0.700049, 0.899951, 1.900000) }
+        },
+        Horn = {
+            id = 14,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Nitrous = {
+            id = 17,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Subwoofer = {
+            id = 19,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Seats = {
+            id = 32,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Steering = {
+            id = 33,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(0.100012, -0.300000, 0.600001) }
+        },
+        Knob = {
+            id = 34,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Plaque = {
+            id = 35,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Ice = {
+            id = 36,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Trunk = {
+            id = 37,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Hydro = {
+            id = 38,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        Lightbar = {
+            id = 49,
+            price = 2000,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
+        ['Enginebay 1'] = {
+            id = 39,
+            price = 2000,
+            cam = {
+                door = 4,
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.400012, 0.000024, 1.000000)
+            }
+        },
+        ['Enginebay 2'] = {
+            id = 40,
+            price = 2000,
+            cam = {
+                door = 4,
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.400012, 0.000024, 1.000000)
+            }
+        },
+        ['Enginebay 3'] = {
+            id = 41,
+            price = 2000,
+            cam = {
+                door = 4,
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.400012, 0.000024, 1.000000)
+            }
+        },
+        ['Chassis 2'] = {
+            id = 42,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.400012, 1.200024, 0.600000)
+            }
+        },
+        ['Chassis 3'] = {
+            id = 43,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.900012, -0.099976, 0.600000)
+            }
+        },
+        ['Chassis 4'] = {
+            id = 44,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-0.800012, 1.000024, 1.400000)
+            }
+        },
+        ['Chassis 5'] = {
+            id = 45,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.100024, 0.800024, 0.000000)
+            }
+        },
+        ['L Door'] = {
+            id = 46,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['R Door'] = {
+            id = 47,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['Livery Mod'] = {
+            id = 48,
+            price = 2000,
+            cam = {
+                angle = vec2(130.5, 19.125),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['Front Bumper'] = {
+            id = 1,
+            price = 2000,
+            cam = {
+                angle = vec2(157.75, 1.125),
+                off = vec3(-3.100024, 0.800024, 0.000000)
+            }
+        },
+        ['Rear Bumper'] = {
+            id = 2,
+            price = 2000,
+            cam = {
+                angle = vec2(-3.25, 0.0),
+                off = vec3(3.900037, 0.000073, 0.100000)
+            }
+        },
+        ['Wing 2'] = {
+            id = 9,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(2.199975, 0.200000, 1.600000)
+            }
+        },
+        ['Rear Wheels'] = {
+            id = 24,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['Plate holder'] = {
+            id = 25,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.100024, 0.800024, 0.000000)
+            }
+        },
+        ['Plate vanity'] = {
+            id = 26,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-2.900037, 0.000049, 0.300000)
+            }
+        },
+        ['Interior 1'] = {
+            id = 27,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['Interior 2'] = {
+            id = 28,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-3.200000, 3.400000, 2.100000)
+            }
+        },
+        ['Interior 3'] = {
+            id = 29,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(-1.000012, 2.800025, 1.400000)
+            }
+        },
+        ['Interior 4'] = {
+            id = 30,
+            price = 2000,
+            cam = {
+                angle = vec2(127.125, 33.0),
+                off = vec3(0.199988, 0.000024, 0.700000)
+            }
+        },
+        ['Interior 5'] = {
+            id = 31,
+            price = 2000,
+            cam = {
+                door = 0,
+                angle = vec2(127.125, 33.0),
+                off = vec3(0.399988, -1.199976, 0.400000)
+            }
+        },
+        ['Plate Index'] = {
+            id = 51,
+            price = 2000,
+            cam = {
+                angle = vec2(178.62, 17.25),
+                off = vec3(-2.900037, 0.000049, 0.300000)
+            },
             data = {
                 getter = GetVehicleNumberPlateTextIndex,
                 mods = {

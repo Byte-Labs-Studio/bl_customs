@@ -18,15 +18,16 @@ local function onExit()
     polyzone.isNear = false
 end
 
-CreateThread(function ()
+CreateThread(function()
     for _, v in ipairs(locations) do
+        local pos = v.pos
         lib_zones.box({
-            coords = v.pos.xyz,
+            coords = pos.xyz,
             size = vec3(8, 8, 6),
-            rotation = v.pos.w,
+            rotation = pos.w,
             onEnter = onEnter,
             onExit = onExit,
-            locData = vector4(v.pos.x, v.pos.y, v.pos.z, v.vehHeading)
+            locData = vector4(pos.x, pos.y, pos.z, pos.w)
         })
     end
 end)

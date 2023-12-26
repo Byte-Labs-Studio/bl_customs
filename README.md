@@ -11,3 +11,5 @@ bl_customs is a vehicle customization script built using React and TypeScript.
 
 # Note: 
 The prices for mods, as defined in the configuration, correspond to the price of the last mod index. For example, if a spoiler has four options, the prices for each option will be calculated based on the number of mods, with the last mod having the specified price.
+# Preview
+https://streamable.com/jkieot

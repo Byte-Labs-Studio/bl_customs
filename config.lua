@@ -1,5 +1,5 @@
 return {
-    moneyType = 'bank',
+    moneyType = 'cash',
     colorCams = {
         dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
         wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
@@ -208,7 +208,8 @@ return {
         Spoiler = {
             id = 0,
             price = 2000,
-            cam = { angle = vec2(-38.25, 12.62), off = vec3(2.800061, -1.699902, 1.000000) }
+            cam = { angle = vec2(-38.25, 12.62), off = vec3(2.800061, -1.699902, 1.000000) },
+            --blacklist = {'sultan'}
         },
         Skirt = {
             id = 3,
@@ -309,6 +310,38 @@ return {
                 off = vec3(-2.400012, 0.000024, 1.000000)
             }
         },
+
+        ['Engine Upgrades'] = {
+            id = 11,
+            labels = {
+                [0] = {label = 'Engine lvl 1', price = 200},
+                [1] = {label = 'Engine lvl 2', price = 200},
+                [2] = {label = 'Engine lvl 3', price = 200},
+                [3] = {label = 'Engine lvl 4', price = 200},
+                [4] = {label = 'Engine lvl 5', price = 200},
+            }
+        },
+        ['Brakes Upgrades'] = {
+            id = 12,
+            labels = {
+                [0] = {label = 'Brakes lvl 1', price = 200},
+                [1] = {label = 'Brakes lvl 2', price = 200},
+                [2] = {label = 'Brakes lvl 3', price = 200},
+                [3] = {label = 'Brakes lvl 4', price = 200},
+                [4] = {label = 'Brakes lvl 5', price = 200},
+            },
+        },
+        ['Armour Upgrades'] = {
+            id = 16,
+            labels = {
+                [0] = {label = 'Armour lvl 1', price = 200},
+                [1] = {label = 'Armour lvl 2', price = 200},
+                [2] = {label = 'Armour lvl 3', price = 200},
+                [3] = {label = 'Armour lvl 4', price = 200},
+                [4] = {label = 'Armour lvl 5', price = 200},
+            },
+        },
+
         ['Enginebay 2'] = {
             id = 40,
             price = 2000,

@@ -101,13 +101,11 @@ function Vehicle.getVehicleDecals()
     local vehicle = cache.vehicle
 
     for mod, type in pairs(Config.decals) do
-        if (not type.blacklist or (type.blacklist and not isVehicleBlacklist(vehicle, type.blacklist))) and (mod == 'Plate Index' or getModsNum(cache.vehicle, type.id) ~= 0) then
-            if mod == 'Plate Index' or getModsNum(cache.vehicle, type.id) ~= 0 then
-                local appliedMod = mod == modType
-                if appliedMod then found = true end
-                decals[id] = { id = mod, selected = appliedMod or nil }
-                id += 1
-            end
+        if (not type.blacklist or (type.blacklist and not isVehicleBlacklist(vehicle, type.blacklist))) and (mod == 'Plate Index' or getModsNum(vehicle, type.id) ~= 0) then
+            local appliedMod = mod == modType
+            if appliedMod then found = true end
+            decals[id] = { id = mod, selected = appliedMod or nil }
+            id += 1
         end
     end
     decals[1].selected = not found and true or decals[1].selected

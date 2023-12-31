@@ -19,6 +19,17 @@ local colorData = Config.colors.color
 ---@param type number
 ---@param wheelData {id: number, price: number}
 ---@return mods[]
+
+local function isVehicleBlacklist(entity, blacklist)
+    local modelName = GetEntityArchetypeName(entity)
+    for _, v in ipairs(blacklist) do
+        if modelName == v then
+            return true
+        end
+    end
+    return false
+end
+
 function Vehicle.getMods(type, wheelData)
     local mods = {}
     local isWheel = type == 23
@@ -53,7 +64,6 @@ function Vehicle.getMods(type, wheelData)
     local id = 1
     local modType = isWheel and 23 or mod.id
     local modsNum = getModsNum(vehicle, modType)
-    local priceStep = mod.price / modsNum
     local currentMod = GetVehicleMod(vehicle, modType)
     Store.stored.currentMod = currentMod
 
@@ -62,12 +72,13 @@ function Vehicle.getMods(type, wheelData)
         local label = getModLabel(text)
         local index = isWheel and 0 or currentMod
         local applied = i == index or nil
+        local customLabel = mod.labels and mod.labels[i]
         mods[id] = {
-            label = (text ~= 'NULL' and label or text),
+            label = customLabel and customLabel.label or (text ~= 'NULL' and label or text),
             id = i,
             selected = applied,
             applied = not isWheel and applied,
-            price = math.floor((priceStep * id) + 0.5)
+            price = customLabel and customLabel.price or math.floor((mod.price / modsNum * id) + 0.5)
         }
         id += 1
     end
@@ -87,12 +98,16 @@ function Vehicle.getVehicleDecals()
     local id = 1
     local modType = Store.modType
     local found = false
+    local vehicle = cache.vehicle
+
     for mod, type in pairs(Config.decals) do
-        if mod == 'Plate Index' or getModsNum(cache.vehicle, type.id) ~= 0 then
-            local appliedMod = mod == modType
-            if appliedMod then found = true end
-            decals[id] = { id = mod, selected = appliedMod or nil }
-            id += 1
+        if (not type.blacklist or (type.blacklist and not isVehicleBlacklist(vehicle, type.blacklist))) and (mod == 'Plate Index' or getModsNum(cache.vehicle, type.id) ~= 0) then
+            if mod == 'Plate Index' or getModsNum(cache.vehicle, type.id) ~= 0 then
+                local appliedMod = mod == modType
+                if appliedMod then found = true end
+                decals[id] = { id = mod, selected = appliedMod or nil }
+                id += 1
+            end
         end
     end
     decals[1].selected = not found and true or decals[1].selected

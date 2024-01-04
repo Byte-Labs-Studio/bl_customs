@@ -6,12 +6,68 @@ local camera = require 'client.modules.camera'
 local Interface = require 'client.modules.utils'
 local table_contain = lib.table.contains
 
+---comment
+---@param menu {type: number, index: number}
+local function applyMod(menu)
+    local entity = cache.vehicle
+    if menu.type == 51 then -- plate index
+        SetVehicleNumberPlateTextIndex(entity, menu.index)
+    else
+        SetVehicleMod(entity, menu.type, menu.index, Store.stored.customTyres)
+    end
+    --if menu.type == 14 then -- do a special thing if you selected a mod
+    --end
+end
+
+---comment
+---@param menu {colorType: string, modIndex: number}
+local function applyColorMod(menu)
+    local selector = {
+        Primary = vehicle.applyVehicleColor,
+        Secondary = vehicle.applyVehicleColor,
+        Interior = vehicle.applyInteriorColor,
+        Wheels = vehicle.applyExtraColor,
+        Pearlescent = vehicle.applyExtraColor,
+        Dashboard = vehicle.applyDashboardColor,
+        Neon = vehicle.applyNeonColor,
+        ['Tyre Smoke'] = vehicle.applyTyreSmokeColor,
+        ['Xenon Lights'] = vehicle.applyXenonLightsColor,
+        ['Window Tint'] = vehicle.applyWindowsTint,
+        ['Neon Colors'] = vehicle.applyNeonColor,
+    }
+    local isSelector = selector[menu.colorType]
+    if not isSelector then return end
+    isSelector(menu)
+end
+
+---comment
+---@param modIndex number
+local function handleMod(modIndex)
+    Store.stored.appliedMods = { modType = Store.modType, mod = modIndex }
+    if Store.menu == 'paint' then
+        applyColorMod({ colorType = Store.modType, modIndex = modIndex })
+    else
+        applyMod({ type = Store.menu == 'wheels' and 23 or Config.decals[Store.modType].id, index = modIndex })
+    end
+end
+
+local function resetLastMod()
+    local storedData = Store.stored
+    if not storedData.boughtMods or storedData.appliedMods and storedData.appliedMods.modType ~= storedData.boughtMods.modType or storedData.appliedMods.mod ~= storedData.boughtMods.mod then
+        if Store.menu == 'wheels' then
+            SetVehicleWheelType(cache.vehicle, Store.stored.currentWheelType)
+        end
+        handleMod(storedData.currentMod)
+    end
+end
+
 local function resetMenuData()
     local entity = cache.vehicle
     SetVehicleDoorsLocked(entity, 1)
     FreezeEntityPosition(entity, false)
-    Store = { menu = 'main', modType = 'none', stored = {}, preview = false }
     camera.destroyCam()
+    resetLastMod()
+    Store = { menu = 'main', modType = 'none', stored = {}, preview = false }
 end
 
 ---comment
@@ -82,51 +138,6 @@ local function handleMainMenus(menu)
 end
 
 ---comment
----@param menu {type: number, index: number}
-local function applyMod(menu)
-    local entity = cache.vehicle
-    if menu.type == 51 then -- plate index
-        SetVehicleNumberPlateTextIndex(entity, menu.index)
-    else
-        SetVehicleMod(entity, menu.type, menu.index, Store.stored.customTyres)
-    end
-    --if menu.type == 14 then -- do a special thing if you selected a mod
-    --end
-end
-
----comment
----@param menu {colorType: string, modIndex: number}
-local function applyColorMod(menu)
-    local selector = {
-        Primary = vehicle.applyVehicleColor,
-        Secondary = vehicle.applyVehicleColor,
-        Interior = vehicle.applyInteriorColor,
-        Wheels = vehicle.applyExtraColor,
-        Pearlescent = vehicle.applyExtraColor,
-        Dashboard = vehicle.applyDashboardColor,
-        Neon = vehicle.applyNeonColor,
-        ['Tyre Smoke'] = vehicle.applyTyreSmokeColor,
-        ['Xenon Lights'] = vehicle.applyXenonLightsColor,
-        ['Window Tint'] = vehicle.applyWindowsTint,
-        ['Neon Colors'] = vehicle.applyNeonColor,
-    }
-    local isSelector = selector[menu.colorType]
-    if not isSelector then return end
-    isSelector(menu)
-end
-
----comment
----@param modIndex number
-local function handleMod(modIndex)
-    Store.stored.appliedMods = { modType = Store.modType, mod = modIndex }
-    if Store.menu == 'paint' then
-        applyColorMod({ colorType = Store.modType, modIndex = modIndex })
-    else
-        applyMod({ type = Store.menu == 'wheels' and 23 or Config.decals[Store.modType].id, index = modIndex })
-    end
-end
-
----comment
 ---@param data {type: string, isBack:boolean, clickedCard:string}
 ---@return table|nil
 local function handleMenuClick(data)
@@ -135,13 +146,7 @@ local function handleMenuClick(data)
     if clickedCard == nil then return end
     camera.switchCam()
     if data.isBack then
-        local storedData = Store.stored
-        if not storedData.boughtMods or storedData.appliedMods and storedData.appliedMods.modType ~= storedData.boughtMods.modType or storedData.appliedMods.mod ~= storedData.boughtMods.mod then
-            if Store.menu == 'wheels' then
-                SetVehicleWheelType(cache.vehicle, Store.stored.currentWheelType)
-            end
-            handleMod(storedData.currentMod)
-        end
+        resetLastMod()
     end
     if menuType == 'menu' then
         Store.menu = clickedCard

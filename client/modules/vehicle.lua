@@ -175,7 +175,7 @@ end
 local function getAllColors()
     local mergedTable = {}
     local id = 1
-    for _, subTable in pairs({ colorData.Chrome, colorData.Matte, colorData.Metal, colorData.Metallic }) do
+    for _, subTable in pairs({ colorData.Chrome, colorData.Matte, colorData.Metal, colorData.Metallic, colorData.Chameleon }) do
         for _, element in ipairs(subTable) do
             mergedTable[id] = element
             id += 1
@@ -264,7 +264,7 @@ end
 ---@param modType string
 ---@return mods[]|nil
 function Vehicle.getVehicleColorsTypes(modType)
-    local isPaintType = getPaintType(modType) --get paint type such Metallic/Matte/Metal/Chrome
+    local isPaintType = getPaintType(modType) --get paint type such Metallic/Matte/Metal/Chrome/Chameleon
     if isPaintType then return isPaintType end
 
 

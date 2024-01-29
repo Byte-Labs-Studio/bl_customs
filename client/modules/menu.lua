@@ -5,7 +5,6 @@ local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
 local Interface = require 'client.modules.utils'
 local table_contain = lib.table.contains
-
 ---comment
 ---@param menu {type: number, index: number}
 local function applyMod(menu)
@@ -43,11 +42,12 @@ end
 ---comment
 ---@param modIndex number
 local function handleMod(modIndex)
-    Store.stored.appliedMods = { modType = Store.modType, mod = modIndex }
+    local modType = Store.modType
+    Store.stored.appliedMods = { modType = modType, mod = modIndex }
     if Store.menu == 'paint' then
-        applyColorMod({ colorType = Store.modType, modIndex = modIndex })
+        applyColorMod({ colorType = modType, modIndex = modIndex })
     else
-        applyMod({ type = Store.menu == 'wheels' and 23 or Config.decals[Store.modType].id, index = modIndex })
+        applyMod({ type = Store.menu == 'wheels' and 23 or Config.decals[modType].id, index = modIndex })
     end
 end
 
@@ -152,7 +152,7 @@ local function handleMenuClick(data)
         Store.menu = clickedCard
     elseif menuType == 'modType' then
         Store.modType = Store.menu == 'paint' and
-        (table_contain(Config.colors.types, clickedCard) and clickedCard or Store.modType) or clickedCard
+            (table_contain(Config.colors.types, clickedCard) and clickedCard or Store.modType) or clickedCard
     end
 
     return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)

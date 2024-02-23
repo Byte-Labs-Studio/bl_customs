@@ -1,5 +1,8 @@
 return {
-    job = 'none',
+    group = 'none',
+    -- group = {
+    --     police = 4 -- grade
+    -- }
     moneyType = 'cash',
     colorCams = {
         dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },

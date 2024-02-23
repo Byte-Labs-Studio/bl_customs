@@ -1,18 +1,24 @@
 local lib_zones = lib.zones
 local config = require 'config'
 local locations = config.locations
-local job = config.job
+local group = config.group
 local core = Framework.core
 local polyzone = {
     isNear = false
 }
 
 ---comment
+local function isAllowed(job)
+    local name = job.name
+    local grade = group[name]
+    return grade and grade <= job.grade.name
+end
+
 ---@param custom {locData: vector4}
 local function onEnter(custom)
-    if job ~= 'none' then
+    if group and type(group) == 'table' then
         local playerData = core.getPlayerData()
-        if playerData.job.name ~= job then return end
+        if not isAllowed(playerData.job) then return end
     end
     lib.showTextUI('[G] - Customs')
     polyzone.pos = custom.locData

@@ -86,11 +86,6 @@ function Camera.createMainCam()
     SetCamRot(mainCam, -19.500000, -0.000000, 219.000000, 0)
 end
 
-RegisterCommand('getheading', function()
-    print(angleZ)
-    print(angleY)
-end)
-
 ---comment
 ---@param data {off: vector3, angle: vector2}
 function Camera.createCam(data)

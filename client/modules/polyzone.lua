@@ -4,6 +4,7 @@ local locations = config.locations
 local group = config.group
 local core = Framework.core
 local polyzone = {
+    pos = vector4(0),
     isNear = false
 }
 
@@ -14,7 +15,7 @@ local function isAllowed(job)
     return grade and grade <= job.grade.name
 end
 
----@param custom {locData: vector4}
+---@param custom {locData: vector4, mods: string}
 local function onEnter(custom)
     if group and type(group) == 'table' then
         local playerData = core.getPlayerData()
@@ -22,6 +23,7 @@ local function onEnter(custom)
     end
     lib.showTextUI('[G] - Customs')
     polyzone.pos = custom.locData
+    polyzone.mods = custom.mods
     polyzone.isNear = true
 end
 
@@ -30,7 +32,6 @@ local function onExit()
     polyzone.pos = nil
     polyzone.isNear = false
 end
-
 
 CreateThread(function()
     for _, v in ipairs(locations) do
@@ -41,6 +42,7 @@ CreateThread(function()
             coords = pos.xyz,
             size = vec3(8, 8, 6),
             rotation = pos.w,
+            mods = v.mods,
             onEnter = onEnter,
             onExit = onExit,
             locData = vector4(pos.x, pos.y, pos.z, pos.w)

@@ -5,6 +5,7 @@ local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
 local Interface = require 'client.modules.utils'
 local table_contain = lib.table.contains
+local uiLoaded = false
 ---comment
 ---@param menu {type: number, index: number}
 local function applyMod(menu)
@@ -43,6 +44,9 @@ end
 ---@param modIndex number
 local function handleMod(modIndex)
     local modType = Store.modType
+
+    if modType == 'none' then return end
+
     Store.stored.appliedMods = { modType = modType, mod = modIndex }
     if Store.menu == 'paint' then
         applyColorMod({ colorType = modType, modIndex = modIndex })
@@ -80,6 +84,14 @@ local function showMenu(show)
     end
     local entity = cache.vehicle
     if not poly.isNear or not entity then return end
+
+    lib.waitFor(function()
+        if uiLoaded then return true end
+    end)
+
+    if poly.mods then
+        Interface.SendReactMessage('setZoneMods', poly.mods)
+    end
     Interface.SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
@@ -134,7 +146,8 @@ local function handleMainMenus(menu)
         end,
     }
 
-    return selector[menu] and selector[menu]()
+    local selectorFun = selector[menu]
+    return selectorFun and selectorFun()
 end
 
 ---comment
@@ -214,6 +227,11 @@ end)
 
 RegisterNUICallback('buyMod', function(data, cb)
     cb(buyMod(data))
+end)
+
+RegisterNUICallback('customsLoaded', function(data, cb)
+    cb(1)
+    uiLoaded = true
 end)
 
 RegisterNUICallback('toggleMod', function(data, cb)

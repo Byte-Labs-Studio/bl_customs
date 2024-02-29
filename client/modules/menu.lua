@@ -175,7 +175,7 @@ end
 ---@param amount number
 ---@return boolean
 local function removeMoney(amount)
-    return lib.callback.await('bl_customs:canAffordMod', false, amount)
+    return poly.free or lib.callback.await('bl_customs:canAffordMod', false, amount)
 end
 
 local function buyMod(data)

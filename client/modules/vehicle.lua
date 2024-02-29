@@ -31,6 +31,7 @@ local function isVehicleBlacklist(entity, blacklist)
 end
 
 function Vehicle.getMods(type, wheelData)
+    local poly = require 'client.modules.polyzone'
     local mods = {}
     local isWheel = type == 23
     local mod = isWheel and wheelData or Config.decals[type]
@@ -78,7 +79,7 @@ function Vehicle.getMods(type, wheelData)
             id = i,
             selected = applied,
             applied = not isWheel and applied,
-            price = customLabel and customLabel.price or math.floor((mod.price / modsNum * id) + 0.5)
+            price = not poly.free and (customLabel and customLabel.price or math.floor((mod.price / modsNum * id) + 0.5)) or 0
         }
         id += 1
     end

@@ -1,5 +1,4 @@
 return {
-    group = 'none',
     -- group = {
     --     police = 4 -- grade
     -- }
@@ -9,16 +8,25 @@ return {
         wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
     },
     locations = {
-        { pos = vector4(727.74, -1088.95, 22.17, 90.0),       blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'}, mods = {
-            decals = true,
-            paint = true,
-        } },
-        { pos = vector4(-206.109, -1328.886, 30.67899, 90.0), blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
-        { pos = vector4(868.22, -1350.14, 25.97, 90.0),       blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
-        { pos = vector4(450.25, -975.71, 25.7, 90.0),         blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
-        { pos = vector4(110.8, 6626.46, 31.89, 90.0),         blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
-        { pos = vector4(1695.14, 3588.98, 35.29, 90.0),       blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
-        { pos = vector4(-1269.103, -3376.59, 13.94014, 90.0), blip = {sprite = 72, color = 1, shortRange = true, label = 'Customs'} },
+        {
+            pos = vector4(727.74, -1088.95, 22.17, 90.0),
+            blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' },
+            mods = {
+                decals = true,
+                paint = true,
+            },
+            group = {
+                police = 4 -- grade
+            },
+            free = true
+        },
+
+        { pos = vector4(-206.109, -1328.886, 30.67899, 90.0), blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
+        { pos = vector4(868.22, -1350.14, 25.97, 90.0),       blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
+        { pos = vector4(450.25, -975.71, 25.7, 90.0),         blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
+        { pos = vector4(110.8, 6626.46, 31.89, 90.0),         blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
+        { pos = vector4(1695.14, 3588.98, 35.29, 90.0),       blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
+        { pos = vector4(-1269.103, -3376.59, 13.94014, 90.0), blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
     },
     colors = {
         types = {

@@ -1,29 +1,32 @@
 local lib_zones = lib.zones
 local config = require 'config'
 local locations = config.locations
-local group = config.group
 local core = Framework.core
 local polyzone = {
     pos = vector4(0),
-    isNear = false
+    isNear = false,
+    mods = nil,
+    free = false,
 }
 
 ---comment
-local function isAllowed(job)
+local function isAllowed(group, job)
     local name = job.name
     local grade = group[name]
     return grade and grade <= job.grade.name
 end
 
----@param custom {locData: vector4, mods: string}
+---@param custom {locData: vector4, mods: table<string, boolean>, group: table<string, number>}
 local function onEnter(custom)
+    local locData, mods, group, free in custom
     if group and type(group) == 'table' then
         local playerData = core.getPlayerData()
-        if not isAllowed(playerData.job) then return end
+        if not isAllowed(group, playerData.job) then return end
     end
     lib.showTextUI('[G] - Customs')
-    polyzone.pos = custom.locData
-    polyzone.mods = custom.mods
+    polyzone.pos = locData
+    polyzone.mods = mods
+    polyzone.free = free
     polyzone.isNear = true
 end
 
@@ -43,6 +46,8 @@ CreateThread(function()
             size = vec3(8, 8, 6),
             rotation = pos.w,
             mods = v.mods,
+            group = v.group,
+            free = v.free,
             onEnter = onEnter,
             onExit = onExit,
             locData = vector4(pos.x, pos.y, pos.z, pos.w)

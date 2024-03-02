@@ -18,21 +18,20 @@ const upperCase = (text: string) => {
 const MainContainer: React.FC = () => {
   const { setMenuData, menu } = useContext(CardsContext);
 
+  const keyPress = useKeyPress(['ArrowRight', 'ArrowLeft', 'Enter', 'Backspace'], true);
   if (menu.current === 'exit') return null
-  const arrowsClick = useKeyPress(['ArrowRight', 'ArrowLeft'], true);
-  const enterClick = useKeyPress('Enter');
-  const backspace = useKeyPress('Backspace');
+
   const [selected, setSelected] = useState<TargetMenuData>({mod: ''})
   const [cardsCount, setCardsCount] = useState<{total: number, current: number}>({total: 0, current: 0})
 
   useEffect(() => {
-    if (backspace) handleClick({mod: 'back'}, menu, setMenuData)
-    if (enterClick && selected.mod !== '') handleClick(selected, menu, setMenuData)
-    if (arrowsClick) {
+    if (keyPress == 'Backspace') handleClick({mod: 'back'}, menu, setMenuData)
+    else if (keyPress == 'Enter' && selected.mod !== '') handleClick(selected, menu, setMenuData)
+    else if (keyPress == 'ArrowRight' || keyPress == 'ArrowLeft') {
       const updatedData = [...menu.data];
       const foundSelected = menu.data.find(obj => obj.selected === true);
       const selectedIndex = foundSelected ? menu.data.indexOf(foundSelected) : 0;
-      const directionMultiplier = arrowsClick === 'ArrowRight' ? (selectedIndex + 1) : (selectedIndex - 1 + menu.data.length);
+      const directionMultiplier = keyPress === 'ArrowRight' ? (selectedIndex + 1) : (selectedIndex - 1 + menu.data.length);
       const nextIndex = directionMultiplier % menu.data.length
       const nextObject = updatedData[nextIndex]
       const isToggle = nextObject.toggle 
@@ -41,7 +40,7 @@ const MainContainer: React.FC = () => {
       if (typeof nextObject.id === 'number' && !isToggle) fetchNui('applyMod', nextObject.id)
       setMenuData({ ...menu, data: updatedData });
     }
-  }, [backspace, enterClick, arrowsClick]);
+  }, [keyPress]);
 
   const RenderCards = useMemo(() => {
     let icon = menu.currentMenu === 'decals' && DecalsSvg || menu.currentMenu === 'wheels' && WheelsSvg || menu.currentMenu === 'paint' && (() => Icon(faFillDrip)) || (() => Icon(faCar))

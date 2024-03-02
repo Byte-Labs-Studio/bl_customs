@@ -1,6 +1,5 @@
 local Vehicle = {}
 local Config = require 'config'
-local Store = require 'client.modules.store'
 local createCam = require 'client.modules.camera'.createCam
 local getModsNum = GetNumVehicleMods
 local getModText = GetModTextLabel
@@ -32,6 +31,7 @@ end
 
 function Vehicle.getMods(type, wheelData)
     local poly = require 'client.modules.polyzone'
+    local store = require 'client.modules.store'
     local mods = {}
     local isWheel = type == 23
     local mod = isWheel and wheelData or Config.decals[type]
@@ -52,7 +52,7 @@ function Vehicle.getMods(type, wheelData)
         local data = mod.data
         mods = table_deepcopy(data.mods)
         local currentMod = data.getter(vehicle)
-        Store.stored.currentMod = currentMod
+        store.stored.currentMod = currentMod
         for _, v in ipairs(mods) do
             if v.id == currentMod then
                 v.selected = true
@@ -66,7 +66,6 @@ function Vehicle.getMods(type, wheelData)
     local modType = isWheel and 23 or mod.id
     local modsNum = getModsNum(vehicle, modType)
     local currentMod = GetVehicleMod(vehicle, modType)
-    Store.stored.currentMod = currentMod
 
     for i = 0, modsNum - 1 do
         local text = getModText(vehicle, modType, i)
@@ -84,6 +83,7 @@ function Vehicle.getMods(type, wheelData)
         id += 1
     end
 
+    store.stored.currentMod = currentMod
     if wheelData then return mods end
 
     local applied = currentMod == -1 or nil
@@ -97,7 +97,7 @@ end
 function Vehicle.getVehicleDecals()
     local decals = {}
     local id = 1
-    local modType = Store.modType
+    local modType = require 'client.modules.store'.modType
     local found = false
     local vehicle = cache.vehicle
 
@@ -127,7 +127,7 @@ function Vehicle.getVehicleWheels()
     end
 
     local customTyres = IsToggleModOn(cache.vehicle, 20)
-    Store.stored.customTyres = customTyres
+    require 'client.modules.store'.stored.customTyres = customTyres
     table_insert(wheels, 1,
         { price = 100, label = 'Custom Tyres', id = -1, selected = true, toggle = true, applied = customTyres })
     return wheels
@@ -139,7 +139,7 @@ end
 function Vehicle.getVehicleWheelsType(type)
     local mod = Config.wheels[type]
     local entity = cache.vehicle
-    Store.stored.currentWheelType = GetVehicleWheelType(entity)
+    require 'client.modules.store'.stored.currentWheelType = GetVehicleWheelType(entity)
     SetVehicleWheelType(entity, mod.id)
     createCam(Config.colorCams.wheels)
     return Vehicle.getMods(23, mod)
@@ -250,7 +250,8 @@ end
 ---@param modType string
 ---@return mods[]|nil
 local function getPaintType(modType)
-    local colorType = Store.modType
+    local store = require 'client.modules.store'
+    local colorType = store.modType
 
     if not table_contain(Config.colors.paints, modType) then return false end
     local colorTypeData = colorData[modType] and table_clone(colorData[modType])
@@ -258,7 +259,7 @@ local function getPaintType(modType)
     local colorPrimary, colorSecondary = GetVehicleColours(cache.vehicle)
     local currentPaint = colorType == 'Primary' and colorPrimary or colorSecondary
     table_insert(colorTypeData, 1, { label = 'Default', id = currentPaint, selected = true, applied = true })
-    Store.stored.currentMod = currentPaint
+    store.stored.currentMod = currentPaint
     return colorTypeData
 end
 
@@ -321,7 +322,7 @@ end
 
 ---@param toggle boolean
 function Vehicle.toggleCustomTyres(toggle)
-    Store.stored.customTyres = toggle
+    require 'client.modules.store'.stored.customTyres = toggle
     ToggleVehicleMod(cache.vehicle, 20, toggle)
 end
 

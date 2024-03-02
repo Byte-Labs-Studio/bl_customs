@@ -9,6 +9,7 @@ export const useKeyPress = (targetKey: KeyboardEvent['key'] | Array<KeyboardEven
       if (preventDef) event.preventDefault();
       if (typeof targetKey === 'object' && targetKey.includes(event.key)) setKeyPressed(event.key);
       else if (event.key === targetKey) setKeyPressed(true);
+      else setKeyPressed(false);
     },
     [targetKey, preventDef]
   );

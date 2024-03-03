@@ -1,7 +1,4 @@
 return {
-    -- group = {
-    --     police = 4 -- grade
-    -- }
     moneyType = 'cash',
     colorCams = {
         dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
@@ -15,10 +12,10 @@ return {
                 decals = true,
                 paint = true,
             },
-            group = {
-                police = 4 -- grade
-            },
-            free = true
+            free = true,
+            -- group = {
+            --     police = 4 -- grade
+            -- },
         },
 
         { pos = vector4(-206.109, -1328.886, 30.67899, 90.0), blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },

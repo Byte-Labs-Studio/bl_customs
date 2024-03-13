@@ -627,8 +627,25 @@ return {
                 }
             }
         },
-        --Gearbox =                 {id = 13, price = 2000, cam = {angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000)}},
-        --Suspension =              {id = 15, price = 2000, cam = {angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000)}},
+        ['Gearbox'] = {
+            id = 13,
+            labels = {
+                [0] = {label = 'Gearbox lvl 1', price = 0},
+                [1] = {label = 'Gearbox lvl 2', price = 0},
+                [2] = {label = 'Gearbox lvl 3', price = 0},
+                [3] = {label = 'Gearbox lvl 4', price = 0},
+            },
+        },
+        ['Suspension'] = {
+            id = 15,
+            cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) },
+            labels = {
+                [0] = {label = 'Suspension lvl 1', price = 0},
+                [1] = {label = 'Suspension lvl 2', price = 0},
+                [2] = {label = 'Suspension lvl 3', price = 0},
+                [3] = {label = 'Suspension lvl 4', price = 0},
+            },
+        },
         --Tyre_smoke =              {id = 20, price = 2000, cam = {angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000)}},
         --Hydraulics =              {id = 21, price = 2000, cam = {angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000)}},
         --Xenon_lights =            {id = 22, price = 2000, cam = {angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000)}},

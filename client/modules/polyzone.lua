@@ -9,6 +9,15 @@ local polyzone = {
     free = false,
 }
 
+local function checkVehicleClass(classes)
+    local currentClass = GetVehicleClass(cache.vehicle)
+    for k,v in ipairs(classes) do
+        if currentClass == v then
+            return true
+        end
+    end
+    return false
+end
 ---comment
 local function isAllowed(group, job)
     local name = job.name
@@ -18,11 +27,14 @@ end
 
 ---@param custom {locData: vector4, mods: table<string, boolean>, group: table<string, number>}
 local function onEnter(custom)
-    local locData, mods, group, free in custom
+    local locData, mods, group, free, classes in custom
     if group and type(group) == 'table' then
         local playerData = core.getPlayerData()
         if not isAllowed(group, playerData.job) then return end
     end
+
+    if classes and not checkVehicleClass(classes) then return end
+
     lib.showTextUI('[G] - Customs')
     polyzone.pos = locData
     polyzone.mods = mods
@@ -48,6 +60,7 @@ CreateThread(function()
             mods = v.mods,
             group = v.group,
             free = v.free,
+            classes = v.classes,
             onEnter = onEnter,
             onExit = onExit,
             locData = vector4(pos.x, pos.y, pos.z, pos.w)

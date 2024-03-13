@@ -16,6 +16,7 @@ return {
             group = {
                 mechanic = 0 -- [job] = [grade]
             },
+            classes = {18}
         },
 
         { pos = vector4(-206.109, -1328.886, 30.67899, 90.0), blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },

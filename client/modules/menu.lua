@@ -224,9 +224,7 @@ local function toggleMod(data)
     local store = require 'client.modules.store'
     local mod, toggle in data
 
-    if mod == 69 then
-        vehicle.toggleCustomTyres(toggle)
-    elseif store.modType == 'Neon' then
+    if store.modType == 'Neon' then
         vehicle.enableNeonColor({ modIndex = mod, toggle = toggle })
     else
         ToggleVehicleMod(cache.vehicle, mod, toggle)

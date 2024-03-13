@@ -159,7 +159,7 @@ function Vehicle.getVehicleWheels()
 
     local customTyres = IsToggleModOn(cache.vehicle, 20)
     require 'client.modules.store'.stored.customTyres = customTyres
-    table_insert(wheels, 1, { price = 100, label = 'Custom Tyres', id = 69, selected = true, toggle = true, applied = customTyres })
+    table_insert(wheels, 1, { price = 100, label = 'Custom Tyres', id = 20, selected = true, toggle = true, applied = customTyres })
     return wheels
 end
 
@@ -348,12 +348,6 @@ end
 ---@param menu applyMod
 function Vehicle.enableNeonColor(menu)
     SetVehicleNeonLightEnabled(cache.vehicle, menu.modIndex, menu.toggle)
-end
-
----@param toggle boolean
-function Vehicle.toggleCustomTyres(toggle)
-    require 'client.modules.store'.stored.customTyres = toggle
-    ToggleVehicleMod(cache.vehicle, 20, toggle)
 end
 
 ---@param menu applyMod

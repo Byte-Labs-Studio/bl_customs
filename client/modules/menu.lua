@@ -10,11 +10,16 @@ local uiLoaded = false
 local function applyMod(menu)
     local storedData = require 'client.modules.store'.stored
     local entity = cache.vehicle
-    if menu.type == 51 then -- plate index
-        SetVehicleNumberPlateTextIndex(entity, menu.index)
+    local type, index in menu
+
+    if type == 51 then -- plate index
+        SetVehicleNumberPlateTextIndex(entity, index)
+    elseif type == 24 then
+        SetVehicleLivery(entity, index)
     else
-        SetVehicleMod(entity, menu.type, menu.index, storedData.customTyres)
+        SetVehicleMod(entity, type, index, storedData.customTyres)
     end
+
     --if menu.type == 14 then -- do a special thing if you selected a mod
     --end
 end
@@ -217,12 +222,16 @@ local function toggleMod(data)
         return false
     end
     local store = require 'client.modules.store'
+    local mod, toggle in data
 
-    if store.menu == 'wheels' then
-        vehicle.toggleCustomTyres(data.toggle)
+    if mod == 69 then
+        vehicle.toggleCustomTyres(toggle)
     elseif store.modType == 'Neon' then
-        vehicle.enableNeonColor({ modIndex = data.mod, toggle = data.toggle })
+        vehicle.enableNeonColor({ modIndex = mod, toggle = toggle })
+    else
+        ToggleVehicleMod(cache.vehicle, mod, toggle)
     end
+
     return true
 end
 

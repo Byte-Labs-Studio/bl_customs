@@ -19,6 +19,14 @@ local colorData = Config.colors.color
 ---@param wheelData {id: number, price: number}
 ---@return mods[]
 
+local function modCount(vehicle, id)
+    if id == 24 then
+        return GetVehicleLiveryCount(vehicle)
+    end
+    return getModsNum(vehicle, id)
+end
+
+
 local function isVehicleBlacklist(entity, blacklist)
     local modelName = GetEntityArchetypeName(entity)
     for _, v in ipairs(blacklist) do
@@ -48,8 +56,8 @@ function Vehicle.getMods(type, wheelData)
         end
     end
 
-    if mod.data then
-        local data = mod.data
+    local data = mod.data
+    if data then
         mods = table_deepcopy(data.mods)
         local currentMod = data.getter(vehicle)
         store.stored.currentMod = currentMod
@@ -64,7 +72,7 @@ function Vehicle.getMods(type, wheelData)
 
     local id = 1
     local modType = isWheel and 23 or mod.id
-    local modsNum = getModsNum(vehicle, modType)
+    local modsNum = modCount(vehicle, modType) or getModsNum(vehicle, modType)
     local currentMod = GetVehicleMod(vehicle, modType)
 
     for i = 0, modsNum - 1 do
@@ -96,20 +104,43 @@ end
 ---@return mods[]
 function Vehicle.getVehicleDecals()
     local decals = {}
-    local id = 1
+    local count = 1
     local modType = require 'client.modules.store'.modType
     local found = false
     local vehicle = cache.vehicle
 
-    for mod, type in pairs(Config.decals) do
-        if (not type.blacklist or (type.blacklist and not isVehicleBlacklist(vehicle, type.blacklist))) and (mod == 'Plate Index' or getModsNum(vehicle, type.id) ~= 0) then
+    for mod, modData in pairs(Config.decals) do
+        local blacklist, id, toggle in modData
+        if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) then
+
+            local add = false
             local appliedMod = mod == modType
             if appliedMod then found = true end
-            decals[id] = { id = mod, selected = appliedMod or nil }
-            id += 1
+            
+            local modCard = {
+                id = mod,
+                selected = appliedMod or nil
+            }
+
+            if modCount(vehicle, id) > 0 then
+                add = true
+            elseif toggle then
+                modCard.id = id
+                modCard.label = mod
+                modCard.price = modData.price
+                modCard.toggle = true
+                modCard.applied = IsToggleModOn(vehicle, id)
+                add = true
+            end
+            if add then
+                decals[count] = modCard
+                count += 1
+            end
         end
     end
+
     decals[1].selected = not found and true or decals[1].selected
+
     return decals
 end
 
@@ -128,8 +159,7 @@ function Vehicle.getVehicleWheels()
 
     local customTyres = IsToggleModOn(cache.vehicle, 20)
     require 'client.modules.store'.stored.customTyres = customTyres
-    table_insert(wheels, 1,
-        { price = 100, label = 'Custom Tyres', id = -1, selected = true, toggle = true, applied = customTyres })
+    table_insert(wheels, 1, { price = 100, label = 'Custom Tyres', id = 69, selected = true, toggle = true, applied = customTyres })
     return wheels
 end
 

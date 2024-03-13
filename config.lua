@@ -363,6 +363,12 @@ return {
             price = 2000,
             cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
         },
+        Turbo = {
+            id = 18,
+            price = 0,
+            toggle = true,
+            cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
+        },
         Steering = {
             id = 33,
             price = 2000,
@@ -537,7 +543,7 @@ return {
                 off = vec3(2.199975, 0.200000, 1.600000)
             }
         },
-        ['Rear Wheels'] = {
+        ['Old Livery'] = {
             id = 24,
             price = 2000,
             cam = {

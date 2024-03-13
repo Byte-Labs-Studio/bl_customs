@@ -32,5 +32,5 @@ files {
   "carmodcols_gen9.meta"
 }
 
-data_file "CARCOLS_GEN9_FILE" "carcols_gen9.meta"
-data_file "CARMODCOLS_GEN9_FILE" "carmodcols_gen9.meta"
+data_file "CARCOLS_GEN9_FILE" "data/carcols_gen9.meta"
+data_file "CARMODCOLS_GEN9_FILE" "data/carmodcols_gen9.meta"

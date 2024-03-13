@@ -28,8 +28,8 @@ files {
   'client/modules/*.lua',
   'web/build/index.html',
   'web/build/**/*',
-  "carcols_gen9.meta", 
-  "carmodcols_gen9.meta"
+  "data/carcols_gen9.meta",
+  "data/carmodcols_gen9.meta"
 }
 
 data_file "CARCOLS_GEN9_FILE" "data/carcols_gen9.meta"

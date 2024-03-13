@@ -2,7 +2,6 @@ local vehicle = require 'client.modules.vehicle'
 local Config = require 'config'
 local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
-local Interface = require 'client.modules.utils'
 local table_contain = lib.table.contains
 local uiLoaded = false
 ---comment
@@ -89,8 +88,9 @@ end
 ---comment
 ---@param show boolean
 local function showMenu(show)
+    local SendReactMessage = require 'client.modules.utils'.SendReactMessage
     if not show then
-        Interface.SendReactMessage('setVisible', false)
+        SendReactMessage('setVisible', false)
         resetMenuData()
         return
     end
@@ -102,9 +102,9 @@ local function showMenu(show)
     end)
 
     if poly.mods then
-        Interface.SendReactMessage('setZoneMods', poly.mods)
+        SendReactMessage('setZoneMods', poly.mods)
     end
-    Interface.SendReactMessage('setVisible', true)
+    SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
     SetVehicleAutoRepairDisabled(entity, true)

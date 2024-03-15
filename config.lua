@@ -1,9 +1,5 @@
 return {
     moneyType = 'cash',
-    colorCams = {
-        dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
-        wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
-    },
     locations = {
         {
             pos = vector4(727.74, -1088.95, 22.17, 90.0),
@@ -27,6 +23,10 @@ return {
         { pos = vector4(-1269.103, -3376.59, 13.94014, 90.0), blip = { sprite = 72, color = 1, shortRange = true, label = 'Customs' } },
     },
     colors = {
+        cams = {
+            dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
+            wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
+        },
         types = {
             'Primary',
             'Secondary',

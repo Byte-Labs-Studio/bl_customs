@@ -171,7 +171,7 @@ function Vehicle.getVehicleWheelsType(type)
     local entity = cache.vehicle
     require 'client.modules.store'.stored.currentWheelType = GetVehicleWheelType(entity)
     SetVehicleWheelType(entity, mod.id)
-    createCam(Config.colorCams.wheels)
+    createCam(Config.colors.cam.wheels)
     return Vehicle.getMods(23, mod)
 end
 
@@ -299,14 +299,14 @@ function Vehicle.getVehicleColorsTypes(modType)
     local isPaintType = getPaintType(modType) --get paint type such Metallic/Matte/Metal/Chrome/Chameleon
     if isPaintType then return isPaintType end
 
-
+    local cam = Config.colors.cam
     local selector = {
         Primary = getPaintTypes,   -- primary
         Secondary = getPaintTypes, -- secondary
         Interior = getAllColors,
         Pearlescent = getAllColors,
         Dashboard = function()
-            createCam(Config.colorCams.dashboard)
+            createCam(cam.dashboard)
             return getAllColors()
         end,
         Neon = getNeons,
@@ -315,7 +315,7 @@ function Vehicle.getVehicleColorsTypes(modType)
         ['Neon Colors'] = getAllColors,
         ['Window Tint'] = getWindowsTint,
         Wheels = function()
-            createCam(Config.colorCams.wheels)
+            createCam(cam.wheels)
             return getAllColors()
         end,
     }

@@ -4,7 +4,7 @@ lua54 'yes'
 game 'gta5'
 
 author "Byte Labs"
-version '1.0.3'
+version '1.0.6'
 
 repository 'Byte-Labs-Project/bl_customs'
 

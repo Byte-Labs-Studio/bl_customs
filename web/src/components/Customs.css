@@ -126,6 +126,7 @@ body {
   transition: all 0.2s ease-in-out;
   width: 40px;
   fill: white;
+  color: white;
 }
 
 .card-text {

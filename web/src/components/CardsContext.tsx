@@ -1,24 +1,42 @@
-import React, { PropsWithChildren, createContext, useMemo, useState } from 'react';
-import { CardsContextProps, MenuProps } from "./type";
+import React, {
+    PropsWithChildren,
+    createContext,
+    useMemo,
+    useState,
+    useEffect,
+} from "react";
+import { CardsContextProps, MenuProps, MenuItem } from "./type";
 import { useNuiEvent } from "../hooks/useNuiEvent";
-import DEFAULT from './DEFAULT_DATA'
+import DEFAULT from "./DEFAULT_DATA";
+import { fetchNui } from "../utils/fetchNui";
 
 const CardsContext = createContext<CardsContextProps>({} as CardsContextProps);
 
 export const CardsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [menu, setMenuData] = useState<MenuProps>(DEFAULT);
 
-    useNuiEvent<{[key: string]: boolean}>("setZoneMods", (mods) => {
-        const clonedObject = { ...DEFAULT };
-        for (let i = clonedObject.data.length - 1; i >= 0; i--) {
-            const element = clonedObject.data[i];
-            if (!mods[element.id] && element.id !== 'preview' && element.id !== 'exit') clonedObject.data.splice(i, 1);
+    useEffect(() => {
+        fetchNui<string[]>("customsLoaded")
+            .then((colorTypes) => {
+                if (!colorTypes) return
+                setMenuData({ ...menu, colorMenus: colorTypes })
+            })
+    }, []);
+
+    useNuiEvent<MenuItem[]>("setZoneMods", (mods) => {
+        const mainMenus = []
+        for (const item of mods) {
+            mainMenus.push(item.id)
         }
-        setMenuData(clonedObject);
+        setMenuData({ ...menu, data: mods, mainMenus: mainMenus, defaultMenu: mods})
     });
 
     const contextValue = useMemo(() => ({ menu, setMenuData }), [menu]);
-    return <CardsContext.Provider value={contextValue}>{children}</CardsContext.Provider>
-}
+    return (
+        <CardsContext.Provider value={contextValue}>
+            {children}
+        </CardsContext.Provider>
+    );
+};
 
-export default CardsContext
+export default CardsContext;

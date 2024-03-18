@@ -1,13 +1,9 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import CardsContext from "./CardsContext";
-import { Icon } from "./Icon";
 import handleClick from "./MenuClick";
 import Card from "./Card";
-import { faCar, faFillDrip } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '../hooks/useKeyPress'
 import { fetchNui } from "../utils/fetchNui";
-import WheelsSvg from './SVG/Wheels'
-import DecalsSvg from './SVG/Decals'
 import { TargetMenuData } from "./type";
 
 
@@ -19,7 +15,7 @@ const MainContainer: React.FC = () => {
   const { setMenuData, menu } = useContext(CardsContext);
 
   const keyPress = useKeyPress(['ArrowRight', 'ArrowLeft', 'Enter', 'Backspace'], true);
-  if (menu.current === 'exit') return null
+  if (menu.card.current === 'exit') return null
 
   const [selected, setSelected] = useState<TargetMenuData>({mod: ''})
   const [cardsCount, setCardsCount] = useState<{total: number, current: number}>({total: 0, current: 0})
@@ -43,16 +39,15 @@ const MainContainer: React.FC = () => {
   }, [keyPress]);
 
   const RenderCards = useMemo(() => {
-    let icon = menu.currentMenu === 'decals' && DecalsSvg || menu.currentMenu === 'wheels' && WheelsSvg || menu.currentMenu === 'paint' && (() => Icon(faFillDrip)) || (() => Icon(faCar))
     return menu.data.map((value, index) => {
       if (value.selected) {
-        setSelected({mod: value.id, price: value.price, toggle: value.toggle, applied: value.applied})
+        setSelected({mod: value.id, price: value.price, toggle: value.toggle, applied: value.applied, icon: value.icon})
         setCardsCount({total: menu.data.length, current: index+1})
       }
       let label = value.id
       if (typeof value.id === 'number') label = value.label
       return (
-        <Card key={index} icon={value.icon || icon} text={upperCase(label)} selected={value.selected} price={value.price || undefined} applied={value.applied || undefined} yellow={value.id === 'exit'}/>
+        <Card key={index} icon={value.icon || menu.icon || 'car'} text={upperCase(label)} selected={value.selected} price={value.price || undefined} applied={value.applied || undefined} yellow={value.id === 'exit'}/>
       )
     })
   }, [menu]);
@@ -60,7 +55,7 @@ const MainContainer: React.FC = () => {
   return (
     <div className="customs-wrapper">
       <div className='cards-swapper'>
-        {upperCase(menu.current)} 
+        {upperCase(menu.card.current)} 
         <p className='cards-count'>{cardsCount.current}/{cardsCount.total}</p>
       </div>
       <div className='cards-wrapper'>

@@ -1,5 +1,4 @@
 local vehicle = require 'client.modules.vehicle'
-local Config = require 'config'
 local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
 local table_contain = lib.table.contains
@@ -56,7 +55,8 @@ local function handleMod(modIndex)
     if store.menu == 'paint' then
         applyColorMod({ colorType = modType, modIndex = modIndex })
     else
-        applyMod({ type = store.menu == 'wheels' and 23 or Config.decals[modType].id, index = modIndex })
+        local decals = require 'data.decals'
+        applyMod({ type = store.menu == 'wheels' and 23 or decals[modType].id, index = modIndex })
     end
 end
 
@@ -85,6 +85,30 @@ local function resetMenuData()
     store.preview = false
 end
 
+local function filterMods()
+    local categories = require'data.categories'
+
+    if not poly.mods then
+        return categories
+    end
+
+    local filter = {}
+    for _, data in ipairs(categories) do
+        local add = false
+        for _, mod in ipairs(poly.mods) do
+            local modId = data.id
+            if modId == 'preview' or modId == 'exit' or modId == mod then
+                add = true
+            end
+        end
+
+        if add then
+            filter[#filter+1] = data
+        end
+    end
+    return filter
+end
+
 ---comment
 ---@param show boolean
 local function showMenu(show)
@@ -101,9 +125,7 @@ local function showMenu(show)
         if uiLoaded then return true end
     end)
 
-    if poly.mods then
-        SendReactMessage('setZoneMods', poly.mods)
-    end
+    SendReactMessage('setZoneMods', filterMods())
     SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
@@ -177,13 +199,12 @@ local function handleMenuClick(data)
     end
     if menuType == 'menu' then
         local store = require 'client.modules.store'
-
         store.menu = clickedCard
+        store.modType = 'none'
     elseif menuType == 'modType' then
         local store = require 'client.modules.store'
-
-        store.modType = store.menu == 'paint' and
-            (table_contain(Config.colors.types, clickedCard) and clickedCard or store.modType) or clickedCard
+        local colors = require 'data.colors'
+        store.modType = store.menu == 'paint' and (table_contain(colors.types, clickedCard) and clickedCard or store.modType) or clickedCard
     end
 
     return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)
@@ -253,8 +274,8 @@ RegisterNUICallback('buyMod', function(data, cb)
 end)
 
 RegisterNUICallback('customsLoaded', function(data, cb)
-    cb(1)
     uiLoaded = true
+    cb(require 'data.colors'.types)
 end)
 
 RegisterNUICallback('toggleMod', function(data, cb)

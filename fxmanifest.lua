@@ -16,6 +16,10 @@ client_scripts {
   "client/init.lua"
 }
 
+dependencies {
+  'bl_bridge',
+}
+
 server_scripts {
   "@bl_bridge/imports/server.lua",
   "server/main.lua"

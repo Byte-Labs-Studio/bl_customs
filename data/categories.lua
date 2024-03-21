@@ -5,9 +5,12 @@ local updateCard = require 'client.modules.utils'.updateCard
 return {
     {
         id = 'custom',
-        label = 'Performance',
-        icon = 'poo',
+        label = 'Custom',
+        icon = 'bug',
         selector = {
+            onOpen = function(data) -- this will trigger before opening the menu (used in repair to update price depend on vehicle damage), data: self data
+                data.icon = 'poo'
+            end,
             onSelect = function()
                 return {
                     {id = 200, toggle = true, label = 'this is toggle', price = 100, selected = true},
@@ -15,14 +18,14 @@ return {
                     {id = 'menu1', label = 'this is a menu'}
                 }
             end,
-            childOnBuy = function(modType) -- this will work if id: number
+            childOnBuy = function(modType) -- this will work if mod id is number such '2000' 
                 if modType == 2000 then -- here we listen to child item
                     print('setted mod')
                     return true -- return true to set check icon
                 end
             end,
-            childOnSelect = function(modType) -- this will work if id: string
-                if modType == 'menu1' then -- here we will create menu for 'menu1'
+            childOnSelect = function(modType) -- this will work if mod id is string such 'menu1'
+                if modType == 'menu1' then -- here we will create submenu for 'menu1', NOTE (currently we don't support menu inside submenu, you will get issue if you try to get back to previous)
                     return {
                         {id = 2000, label = 'this is a mod'},
                         {id = 2002, label = 'this is a mod2'},

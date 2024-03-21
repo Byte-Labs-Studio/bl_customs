@@ -34,16 +34,20 @@ local function applyColorMod(menu)
     selector.setter(menu)
 end
 
+local function triggerSelector(prop, ...)
+    local category = require 'client.modules.filter'.named[store.menu]
+    local selector = category and category.selector
+    if not selector or not selector[prop] then return end
+    return selector[prop](...)
+end
+
+
 ---comment
 ---@param modIndex number
 local function handleMod(modIndex)
     local modType = store.modType ~= 'none' and store.modType
-    local category = require 'client.modules.filter'.named[store.menu]
-    local selector = category and category.selector
 
-    if selector and selector.onModSwitch then
-        selector.onModSwitch(modType or store.menu, modIndex)
-    end
+    triggerSelector('onModSwitch', modType or store.menu, modIndex)
     if not modType then return end
 
     store.stored.appliedMods = { modType = modType, mod = modIndex }
@@ -141,13 +145,6 @@ end
 ---comment
 ---@param type string
 ---@return table|nil
-local function triggerSelector(prop, ...)
-    local category = require 'client.modules.filter'.named[store.menu]
-    local selector = category and category.selector
-    if not selector or not selector[prop] then return end
-    return selector[prop](...)
-end
-
 local function getModType(type)
     return triggerSelector('childOnSelect', type)
 end
@@ -219,13 +216,6 @@ local function toggleMod(data)
         return false
     end
     local mod, toggle in data
-
-    local category = require 'client.modules.filter'.named[store.menu]
-    local selector = category and category.selector
-    
-    if selector and selector.childOnToggle then
-        selector.childOnToggle(mod, toggle)
-    end
 
     if store.modType == 'Neon' then
         vehicle.enableNeonColor({ modIndex = mod, toggle = toggle })

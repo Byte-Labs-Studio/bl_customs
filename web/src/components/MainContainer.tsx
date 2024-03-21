@@ -79,8 +79,7 @@ const MainContainer: React.FC = () => {
   const RenderCards = useMemo(() => {
     return menu.data.map((value, index) => {
       if (!value.hide) {
-        let label = value.id;
-        if (typeof value.id === "number") label = value.label;
+        let label = value.label || value.id;
         return (
           <Card
             key={index}

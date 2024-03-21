@@ -11,6 +11,8 @@ repository 'Byte-Labs-Project/bl_customs'
 ui_page 'web/build/index.html'
 --ui_page 'http://localhost:5173/'
 
+dependency 'bl_bridge'
+
 client_scripts {
   "@bl_bridge/imports/client.lua",
   "client/init.lua"

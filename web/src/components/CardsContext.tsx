@@ -35,17 +35,17 @@ export const CardsProvider: React.FC<PropsWithChildren> = ({ children }) => {
         type keys = keyof MenuItem;
         const updatedData = menu.data.map((card) => {
             if (card.id === mod.id) {
-              (Object.keys(mod.update) as Array<keys>).forEach((prop) => {
-                if (prop in card) {
-                  (card[prop] as MenuItem[keys]) = mod.update[prop];
-                }
-              });
+                (Object.keys(mod.update) as Array<keys>).forEach((prop) => {
+                    if (prop in card) {
+                      (card[prop] as MenuItem[keys]) = mod.update[prop];
+                    }
+                });
             }
             return card;
         });
       
         setMenuData({ ...menu, data: updatedData, defaultMenu: updatedData });
-      });
+    });
 
     const contextValue = useMemo(() => ({ menu, setMenuData }), [menu]);
     return (

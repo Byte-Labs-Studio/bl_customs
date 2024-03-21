@@ -8,8 +8,8 @@ version '1.0.6'
 
 repository 'Byte-Labs-Project/bl_customs'
 
---ui_page 'web/build/index.html'
-ui_page 'http://localhost:5173/'
+ui_page 'web/build/index.html'
+--ui_page 'http://localhost:5173/'
 
 client_scripts {
   "@bl_bridge/imports/client.lua",
@@ -24,7 +24,6 @@ server_scripts {
 shared_script '@ox_lib/init.lua'
 
 files {
-  'config.lua',
   'data/*.lua',
   'client/modules/*.lua',
   'web/build/index.html',

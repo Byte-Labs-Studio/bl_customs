@@ -1,107 +1,128 @@
 return {
     Spoiler = {
+        menuId = 'decals',
         id = 0,
         price = 2000,
         cam = { angle = vec2(-38.25, 12.62), off = vec3(2.800061, -1.699902, 1.000000) },
         --blacklist = {'sultan'}
     },
     Skirt = {
+        menuId = 'decals',
         id = 3,
         price = 2000,
-        cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) }
+        cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) },
     },
     Exhaust = {
+        menuId = 'decals',
         id = 4,
         price = 2000,
         cam = { angle = vec2(-0.875, 7.87), off = vec3(3.099988, 0.000073, 0.000000) }
     },
     Chassis = {
+        menuId = 'decals',
         id = 5,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Grill = {
+        menuId = 'decals',
         id = 6,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-2.900037, 0.000049, 0.300000) }
     },
     Bonnet = {
+        menuId = 'decals',
         id = 7,
         price = 2000,
         cam = { angle = vec2(163.5, 19.635), off = vec3(-2.900012, 0.700024, 1.300000) }
     },
     Wing = {
+        menuId = 'decals',
         id = 8,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(2.599976, 1.800000, 1.600000) }
     },
     Roof = {
+        menuId = 'decals',
         id = 10,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-0.700049, 0.899951, 1.900000) }
     },
     Horn = {
+        menuId = 'decals',
         id = 14,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Nitrous = {
+        menuId = 'decals',
         id = 17,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Subwoofer = {
+        menuId = 'decals',
         id = 19,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Seats = {
+        menuId = 'decals',
         id = 32,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Turbo = {
+        menuId = 'decals',
         id = 18,
         price = 0,
         toggle = true,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Steering = {
+        menuId = 'decals',
         id = 33,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(0.100012, -0.300000, 0.600001) }
     },
     Knob = {
+        menuId = 'decals',
         id = 34,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Plaque = {
+        menuId = 'decals',
         id = 35,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Ice = {
+        menuId = 'decals',
         id = 36,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Trunk = {
+        menuId = 'decals',
         id = 37,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Hydro = {
+        menuId = 'decals',
         id = 38,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     Lightbar = {
+        menuId = 'decals',
         id = 49,
         price = 2000,
         cam = { angle = vec2(127.125, 33.0), off = vec3(-3.200000, 3.400000, 2.100000) }
     },
     ['Enginebay 1'] = {
+        menuId = 'decals',
         id = 39,
         price = 2000,
         cam = {
@@ -112,6 +133,7 @@ return {
     },
 
     ['Engine Upgrades'] = {
+        menuId = 'performance',
         id = 11,
         labels = {
             [0] = {label = 'Engine lvl 1', price = 200},
@@ -122,6 +144,7 @@ return {
         }
     },
     ['Brakes Upgrades'] = {
+        menuId = 'performance',
         id = 12,
         labels = {
             [0] = {label = 'Brakes lvl 1', price = 200},
@@ -132,6 +155,7 @@ return {
         },
     },
     ['Armour Upgrades'] = {
+        menuId = 'performance',
         id = 16,
         labels = {
             [0] = {label = 'Armour lvl 1', price = 200},
@@ -143,6 +167,7 @@ return {
     },
 
     ['Enginebay 2'] = {
+        menuId = 'decals',
         id = 40,
         price = 2000,
         cam = {
@@ -152,6 +177,7 @@ return {
         }
     },
     ['Enginebay 3'] = {
+        menuId = 'decals',
         id = 41,
         price = 2000,
         cam = {
@@ -161,6 +187,7 @@ return {
         }
     },
     ['Chassis 2'] = {
+        menuId = 'decals',
         id = 42,
         price = 2000,
         cam = {
@@ -169,6 +196,7 @@ return {
         }
     },
     ['Chassis 3'] = {
+        menuId = 'decals',
         id = 43,
         price = 2000,
         cam = {
@@ -177,6 +205,7 @@ return {
         }
     },
     ['Chassis 4'] = {
+        menuId = 'decals',
         id = 44,
         price = 2000,
         cam = {
@@ -185,6 +214,7 @@ return {
         }
     },
     ['Chassis 5'] = {
+        menuId = 'decals',
         id = 45,
         price = 2000,
         cam = {
@@ -193,6 +223,7 @@ return {
         }
     },
     ['L Door'] = {
+        menuId = 'decals',
         id = 46,
         price = 2000,
         cam = {
@@ -201,6 +232,7 @@ return {
         }
     },
     ['R Door'] = {
+        menuId = 'decals',
         id = 47,
         price = 2000,
         cam = {
@@ -209,6 +241,7 @@ return {
         }
     },
     ['Livery Mod'] = {
+        menuId = 'decals',
         id = 48,
         price = 2000,
         cam = {
@@ -217,6 +250,7 @@ return {
         }
     },
     ['Front Bumper'] = {
+        menuId = 'decals',
         id = 1,
         price = 2000,
         cam = {
@@ -225,6 +259,7 @@ return {
         }
     },
     ['Rear Bumper'] = {
+        menuId = 'decals',
         id = 2,
         price = 2000,
         cam = {
@@ -233,6 +268,7 @@ return {
         }
     },
     ['Wing 2'] = {
+        menuId = 'decals',
         id = 9,
         price = 2000,
         cam = {
@@ -241,6 +277,7 @@ return {
         }
     },
     ['Old Livery'] = {
+        menuId = 'decals',
         id = 24,
         price = 2000,
         cam = {
@@ -249,6 +286,7 @@ return {
         }
     },
     ['Plate holder'] = {
+        menuId = 'decals',
         id = 25,
         price = 2000,
         cam = {
@@ -257,6 +295,7 @@ return {
         }
     },
     ['Plate vanity'] = {
+        menuId = 'decals',
         id = 26,
         price = 2000,
         cam = {
@@ -265,6 +304,7 @@ return {
         }
     },
     ['Interior 1'] = {
+        menuId = 'decals',
         id = 27,
         price = 2000,
         cam = {
@@ -273,6 +313,7 @@ return {
         }
     },
     ['Interior 2'] = {
+        menuId = 'decals',
         id = 28,
         price = 2000,
         cam = {
@@ -281,6 +322,7 @@ return {
         }
     },
     ['Interior 3'] = {
+        menuId = 'decals',
         id = 29,
         price = 2000,
         cam = {
@@ -289,6 +331,7 @@ return {
         }
     },
     ['Interior 4'] = {
+        menuId = 'decals',
         id = 30,
         price = 2000,
         cam = {
@@ -297,6 +340,7 @@ return {
         }
     },
     ['Interior 5'] = {
+        menuId = 'decals',
         id = 31,
         price = 2000,
         cam = {
@@ -306,6 +350,7 @@ return {
         }
     },
     ['Plate Index'] = {
+        menuId = 'decals',
         id = 51,
         price = 2000,
         cam = {
@@ -325,6 +370,7 @@ return {
         }
     },
     ['Gearbox'] = {
+        menuId = 'performance',
         id = 13,
         labels = {
             [0] = {label = 'Gearbox lvl 1', price = 0},
@@ -334,6 +380,7 @@ return {
         },
     },
     ['Suspension'] = {
+        menuId = 'performance',
         id = 15,
         cam = { angle = vec2(96.375, 12.125), off = vec3(-0.200012, 2.700024, 0.100000) },
         labels = {

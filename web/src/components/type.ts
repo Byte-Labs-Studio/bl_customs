@@ -1,31 +1,33 @@
 import React from 'react';
 
+
+interface Item {
+    price?: number;
+    applied?: boolean;
+    menuType?: string,
+    icon?: string;
+    toggle?: boolean;
+}
+
 interface CardProps {
     icon: string;
     text: string;
+    price?: number;
+    applied?: boolean;
     yellow?: boolean;
     style?: React.CSSProperties;
     selected?: boolean;
-    price?: number;
-    applied?: boolean;
 }
 
-interface TargetMenuData {
+interface TargetMenuData extends Item {
     mod: string,
-    price?: number,
-    toggle?: boolean,
-    applied?: boolean,
-    icon?:string
 }
 
-interface MenuItem {
+interface MenuItem extends Item {
     id: string;
     label: string;
     selected?: boolean;
-    price?: number;
-    applied?: boolean;
-    icon?: string;
-    toggle?: boolean;
+    hide?: boolean
 }
 
 interface MenuProps {

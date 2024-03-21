@@ -1,19 +1,55 @@
+local vehicle = require 'client.modules.vehicle'
+local applyVehicleColor, applyInteriorColor, applyExtraColor, applyDashboardColor, applyNeonColor, applyTyreSmokeColor, applyXenonLightsColor, applyWindowsTint,--setters
+getPaintTypes, getAllColors, getNeons, getXenonColor, getTyreSmokes, getWindowsTint in vehicle --getters
+
 return {
-    cam = {
-        dashboard = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
-        wheels = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
-    },
-    types = {
-        'Primary',
-        'Secondary',
-        'Dashboard',
-        'Interior',
-        'Wheels',
-        'Pearlescent',
-        'Neon',
-        'Tyre Smoke',
-        'Xenon Lights',
-        'Window Tint'
+    functions = {
+        Primary = {
+            getter = getPaintTypes,
+            setter = applyVehicleColor
+        },
+        Secondary = {
+            getter = getPaintTypes,
+            setter = applyVehicleColor
+        },
+        Dashboard = {
+            cam = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
+            getter = getAllColors,
+            setter = applyDashboardColor
+        },
+        Interior = {
+            getter = getAllColors,
+            setter = applyInteriorColor
+        },
+        Wheels = {
+            cam = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
+            getter = getAllColors,
+            setter = applyExtraColor
+        },
+        Pearlescent = {
+            getter = getAllColors,
+            setter = applyExtraColor
+        },
+        Neon = {
+            getter = getNeons,
+            setter = applyNeonColor
+        },
+        ['Tyre Smoke'] = {
+            getter = getTyreSmokes,
+            setter = applyTyreSmokeColor
+        },
+        ['Xenon Lights'] = {
+            getter = getXenonColor,
+            setter = applyXenonLightsColor
+        },
+        ['Window Tint'] = {
+            getter = getWindowsTint,
+            setter = applyWindowsTint
+        },
+        ['Neon Colors'] = {
+            getter = getAllColors,
+            setter = applyNeonColor
+        }
     },
     paints = {
         'Metallic',

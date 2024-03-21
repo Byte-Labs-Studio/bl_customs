@@ -37,7 +37,7 @@ return {
             childOnToggle = function(modType, toggle) -- this will trigger when clicking on mod that has toggle
                 print(modType, toggle)
             end,
-            onModSwitch = function(modType, modId) -- function(modType: parentMenu, modId: modId which is above '2000') this will only work on mod and not toggle
+            onModSwitch = function(modType, modId) -- function(modType: parentMenu, modId: modId) | this will only work on mod and not toggle
                 print(modType, modId)
             end
         },

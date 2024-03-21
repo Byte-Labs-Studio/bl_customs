@@ -9,7 +9,7 @@ return {
         icon = 'bug',
         hide = true,
         selector = {
-            onOpen = function(data) -- this will trigger before rendering the UI (used in repair to update price depend on vehicle damage), data: self data
+            onOpen = function(data) -- this will trigger before rendering the current menu (used in repair to update price depend on vehicle damage), data: self data
                 data.icon = 'poo' --here we will update icon
             end,
             onSelect = function()

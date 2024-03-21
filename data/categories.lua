@@ -7,6 +7,7 @@ return {
         id = 'custom',
         label = 'Custom',
         icon = 'bug',
+        hide = true,
         selector = {
             onOpen = function(data) -- this will trigger before opening the menu (used in repair to update price depend on vehicle damage), data: self data
                 data.icon = 'poo'

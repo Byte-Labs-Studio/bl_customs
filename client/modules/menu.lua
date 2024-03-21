@@ -173,7 +173,7 @@ local function handleMenuClick(data)
     end
     if cardType == 'menu' then
         store.menu = clickedCard
-        store.menuType = menuType or store.menuType
+        store.menuType = menuType or 'main'
         store.modType = 'none'
         return handleMainMenus(clickedCard)
     elseif cardType == 'modType' then

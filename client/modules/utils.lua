@@ -15,6 +15,13 @@ function Utils.SendReactMessage(action, data)
   SetNuiFocus(data, data)
 end
 
+function Utils.updateCard(id, update)
+  Utils.SendReactMessage('updateCard', {
+    id = id,
+    update = update
+  })
+end
+
 function Utils.debugPrint(...)
   if not debugIsEnabled then return end
   local args <const> = { ... }

@@ -1,5 +1,4 @@
 local Vehicle = {}
-local Config = require 'config'
 local createCam = require 'client.modules.camera'.createCam
 local getModsNum = GetNumVehicleMods
 local getModText = GetModTextLabel
@@ -8,12 +7,10 @@ local lib_table = lib.table
 local table_deepcopy = lib_table.deepclone
 local table_contain = lib_table.contains
 local table_matches = lib_table.matches
-local table_clone = table.clone
 local table_insert = table.insert
-local colorData = Config.colors.color
+local store = require 'client.modules.store'
 
 ---@alias mods {label: string, id: number, selected?: boolean, applied?: boolean, price?: number}
-
 
 ---@param type number
 ---@param wheelData {id: number, price: number}
@@ -26,7 +23,6 @@ local function modCount(vehicle, id)
     return getModsNum(vehicle, id)
 end
 
-
 local function isVehicleBlacklist(entity, blacklist)
     local modelName = GetEntityArchetypeName(entity)
     for _, v in ipairs(blacklist) do
@@ -37,12 +33,53 @@ local function isVehicleBlacklist(entity, blacklist)
     return false
 end
 
-function Vehicle.getMods(type, wheelData)
-    local poly = require 'client.modules.polyzone'
-    local store = require 'client.modules.store'
+local function checkSelected(data, currentMod)
+    local isSelected = false
+    for _, v in ipairs(data) do
+        if v.id == currentMod then
+            v.selected = true
+            v.applied = true
+            isSelected = true
+        end
+    end
+    if not isSelected then
+        data[1].selected = true
+        data[1].applied = true
+    end
+    return data
+end
+
+---comment
+---@param modType string
+---@return mods[]|nil
+local function getPaintType(modType)
+    local zone = require 'client.modules.polyzone'
+    local colors = require 'data.colors'
+    local colorType = store.modType
+
+    if not table_contain(colors.paints, modType) then return false end
+
+    local colorsData = colors.data[modType]
+    local colorTypeData = colorsData and table_deepcopy(colorsData)
+    if not colorTypeData then return end
+    local colorPrimary, colorSecondary = GetVehicleColours(cache.vehicle)
+    local currentPaint = colorType == 'Primary' and colorPrimary or colorSecondary
+    if zone.free then
+        for _,v in ipairs(colorTypeData) do
+            v.price = 0
+        end
+    end
+    table_insert(colorTypeData, 1, { label = 'Default', id = currentPaint, selected = true, applied = true })
+    store.stored.currentMod = currentPaint
+    return colorTypeData
+end
+
+function Vehicle.getMod(type, wheelData)
+    local zone = require 'client.modules.polyzone'
+    local stored = store.stored
     local mods = {}
     local isWheel = type == 23
-    local mod = isWheel and wheelData or Config.decals[type]
+    local mod = isWheel and wheelData or require 'data.decals'[type]
     local vehicle = cache.vehicle
 
     if not isWheel then
@@ -60,7 +97,7 @@ function Vehicle.getMods(type, wheelData)
     if data then
         mods = table_deepcopy(data.mods)
         local currentMod = data.getter(vehicle)
-        store.stored.currentMod = currentMod
+        stored.currentMod = currentMod
         for _, v in ipairs(mods) do
             if v.id == currentMod then
                 v.selected = true
@@ -86,12 +123,12 @@ function Vehicle.getMods(type, wheelData)
             id = i,
             selected = applied,
             applied = not isWheel and applied,
-            price = not poly.free and (customLabel and customLabel.price or math.floor((mod.price / modsNum * id) + 0.5)) or 0
+            price = not zone.free and (customLabel and customLabel.price or math.floor((mod.price / modsNum * id) + 0.5)) or 0
         }
         id += 1
     end
 
-    store.stored.currentMod = currentMod
+    stored.currentMod = currentMod
     if wheelData then return mods end
 
     local applied = currentMod == -1 or nil
@@ -105,13 +142,16 @@ end
 function Vehicle.getVehicleDecals()
     local decals = {}
     local count = 1
-    local modType = require 'client.modules.store'.modType
+    local modType = store.modType
+    local currentMenu = store.menu
+    local zone = require 'client.modules.polyzone'
+
     local found = false
     local vehicle = cache.vehicle
 
-    for mod, modData in pairs(Config.decals) do
-        local blacklist, id, toggle in modData
-        if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) then
+    for mod, modData in pairs(require 'data.decals') do
+        local blacklist, id, toggle, menuId in modData
+        if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) and menuId == currentMenu then
 
             local add = false
             local appliedMod = mod == modType
@@ -127,7 +167,7 @@ function Vehicle.getVehicleDecals()
             elseif toggle then
                 modCard.id = id
                 modCard.label = mod
-                modCard.price = modData.price
+                modCard.price = not zone.free and modData.price or 0
                 modCard.toggle = true
                 modCard.applied = IsToggleModOn(vehicle, id)
                 add = true
@@ -139,7 +179,9 @@ function Vehicle.getVehicleDecals()
         end
     end
 
-    decals[1].selected = not found and true or decals[1].selected
+    if decals[1] then
+        decals[1].selected = not found and true or decals[1].selected
+    end
 
     return decals
 end
@@ -148,51 +190,62 @@ end
 ---@return mods[]
 function Vehicle.getVehicleWheels()
     local wheels = {}
-    local wheelsData = Config.wheels
-    local data = GetVehicleClass(cache.vehicle) == 8 and { Bike = { id = 6, price = 2000 } } or wheelsData
+    local vehicle = cache.vehicle
+    local wheelsData = require 'data.wheels'
+    local zone = require 'client.modules.polyzone'
+    local data = GetVehicleClass(vehicle) == 8 and { Bike = { id = 6, price = not zone.free and 2000 or 0 } } or wheelsData
 
-    local id = 1
-    for mod in pairs(data) do
-        wheels[id] = { id = mod }
-        id += 1
+    local count = 1
+    for mod, modData in pairs(data) do
+        local blacklist, id, toggle, price in modData
+        if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) then
+            price = not zone.free and price or 0
+            if toggle then
+                modData.applied = IsToggleModOn(vehicle, id)
+                wheels[count] = modData
+                if id == 20 then
+                    store.stored.customTyres = modData.applied
+                end
+            else
+                wheels[count] = { id = type(mod) == 'string' and mod or id }
+            end
+            count += 1
+        end
     end
 
-    local customTyres = IsToggleModOn(cache.vehicle, 20)
-    require 'client.modules.store'.stored.customTyres = customTyres
-    table_insert(wheels, 1, { price = 100, label = 'Custom Tyres', id = 20, selected = true, toggle = true, applied = customTyres })
     return wheels
 end
 
 ---comment
 ---@param type string
 ---@return mods[]
-function Vehicle.getVehicleWheelsType(type)
-    local mod = Config.wheels[type]
+function Vehicle.getVehicleWheelType(type)
+    local mod = require 'data.wheels'[type]
     local entity = cache.vehicle
-    require 'client.modules.store'.stored.currentWheelType = GetVehicleWheelType(entity)
+    store.stored.currentWheelType = GetVehicleWheelType(entity)
     SetVehicleWheelType(entity, mod.id)
-    createCam(Config.colors.cam.wheels)
-    return Vehicle.getMods(23, mod)
+    createCam(require 'data.colors'.functions.Wheels.cam)
+    return Vehicle.getMod(23, mod)
 end
 
 ----colors
 
 ---@return mods[]
 function Vehicle.getVehicleColors()
-    local colors = {}
+    local colorsData = {}
     local id = 1
-    for _, mod in ipairs(Config.colors.types) do
-        colors[id] = { id = mod, selected = id == 1 or nil }
+    for _, mod in ipairs(require 'client.modules.filter'.colorTypes) do
+        colorsData[id] = { id = mod, selected = id == 1 or nil }
         id += 1
     end
-    return colors
+    return colorsData
 end
 
 ---@return mods[]
-local function getPaintTypes()
+function Vehicle.getPaintTypes()
     local paint = {}
     local id = 1
-    for _, mod in ipairs(Config.colors.paints) do
+    for _, mod in ipairs(require 'data.colors'.paints) do
         paint[id] = { id = mod, selected = id == 1 or nil }
         id += 1
     end
@@ -201,13 +254,16 @@ end
 
 --modIndex
 
-
 ---@return mods[]
-local function getAllColors()
+function Vehicle.getAllColors()
+    local colorData = require 'data.colors'.data
     local mergedTable = {}
     local id = 1
-    for _, subTable in pairs({ colorData.Chrome, colorData.Matte, colorData.Metal, colorData.Metallic, colorData.Chameleon }) do
+    local zone = require 'client.modules.polyzone'
+
+    for _, subTable in pairs(table_deepcopy({ colorData.Chrome, colorData.Matte, colorData.Metal, colorData.Metallic, colorData.Chameleon })) do
         for _, element in ipairs(subTable) do
+            element.price = not zone.free and element.price or 0
             mergedTable[id] = element
             id += 1
         end
@@ -218,9 +274,10 @@ end
 
 
 ---@return mods[]
-local function getNeons()
+function Vehicle.getNeons()
     local entity = cache.vehicle
     local currentMod = IsVehicleNeonLightEnabled
+    local colorData = require 'data.colors'.data
     local data = table_deepcopy(colorData.Neons)
 
     for _, v in ipairs(data) do
@@ -231,24 +288,15 @@ local function getNeons()
     return data
 end
 
-
 ---@return mods[]
-local function getXenonColor()
-    local currentMod = GetVehicleXenonLightsColor(cache.vehicle)
-    local data = table_deepcopy(colorData.Xenon)
-
-    for _, v in ipairs(data) do
-        if v.id == currentMod then
-            v.selected = true
-            v.applied = true
-        end
-    end
-    return data
+function Vehicle.getXenonColor()
+    local colorData = require 'data.colors'.data
+    return checkSelected(table_deepcopy(colorData.Xenon), GetVehicleXenonLightsColor(cache.vehicle))
 end
 
-
 ---@return mods[]
-local function getTyreSmokes()
+function Vehicle.getTyreSmokes()
+    local colorData = require 'data.colors'.data
     local currentMod = { GetVehicleTyreSmokeColor(cache.vehicle) }
     local data = table_deepcopy(colorData.TyreSmoke)
 
@@ -263,75 +311,36 @@ local function getTyreSmokes()
 end
 
 ---@return mods[]
-local function getWindowsTint()
-    local currentMod = GetVehicleWindowTint(cache.vehicle)
-    local data = table_deepcopy(colorData.WindowsTint)
-
-    for _, v in ipairs(data) do
-        if v.id == currentMod then
-            v.selected = true
-            v.applied = true
-        end
-    end
-    return data
-end
-
----comment
----@param modType string
----@return mods[]|nil
-local function getPaintType(modType)
-    local store = require 'client.modules.store'
-    local colorType = store.modType
-
-    if not table_contain(Config.colors.paints, modType) then return false end
-    local colorTypeData = colorData[modType] and table_clone(colorData[modType])
-    if not colorTypeData then return end
-    local colorPrimary, colorSecondary = GetVehicleColours(cache.vehicle)
-    local currentPaint = colorType == 'Primary' and colorPrimary or colorSecondary
-    table_insert(colorTypeData, 1, { label = 'Default', id = currentPaint, selected = true, applied = true })
-    store.stored.currentMod = currentPaint
-    return colorTypeData
+function Vehicle.getWindowsTint()
+    local colorData = require 'data.colors'.data
+    return checkSelected(table_deepcopy(colorData.WindowsTint), GetVehicleWindowTint(cache.vehicle))
 end
 
 ---@param modType string
 ---@return mods[]|nil
-function Vehicle.getVehicleColorsTypes(modType)
+function Vehicle.getVehicleColorTypes(modType)
     local isPaintType = getPaintType(modType) --get paint type such Metallic/Matte/Metal/Chrome/Chameleon
     if isPaintType then return isPaintType end
 
-    local cam = Config.colors.cam
-    local selector = {
-        Primary = getPaintTypes,   -- primary
-        Secondary = getPaintTypes, -- secondary
-        Interior = getAllColors,
-        Pearlescent = getAllColors,
-        Dashboard = function()
-            createCam(cam.dashboard)
-            return getAllColors()
-        end,
-        Neon = getNeons,
-        ['Tyre Smoke'] = getTyreSmokes,
-        ['Xenon Lights'] = getXenonColor,
-        ['Neon Colors'] = getAllColors,
-        ['Window Tint'] = getWindowsTint,
-        Wheels = function()
-            createCam(cam.wheels)
-            return getAllColors()
-        end,
-    }
-    return selector[modType] and selector[modType]()
+    local colors = require 'data.colors'
+    local selector = colors.functions[modType]
+    if not selector then return end
+    if selector.cam then
+        createCam(selector.cam)
+    end
+    return selector.getter()
 end
 
 -- mod index application
 
----@alias applyMod {modIndex: number, toggle?: boolean}
+---@alias applyColor {modIndex: number, colorType?: string}
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyInteriorColor(menu)
     SetVehicleInteriorColor(cache.vehicle, menu.modIndex)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyExtraColor(menu)
     local entity = cache.vehicle
     local pearlescentColor, wheelColor = GetVehicleExtraColours(entity)
@@ -340,43 +349,44 @@ function Vehicle.applyExtraColor(menu)
     SetVehicleExtraColours(entity, pearlescentColor, wheelColor)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyDashboardColor(menu)
     SetVehicleDashboardColor(cache.vehicle, menu.modIndex)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.enableNeonColor(menu)
     SetVehicleNeonLightEnabled(cache.vehicle, menu.modIndex, menu.toggle)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyWindowsTint(menu)
     SetVehicleWindowTint(cache.vehicle, menu.modIndex)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyNeonColor(menu)
     SetVehicleNeonLightsColor_2(cache.vehicle, menu.modIndex)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyTyreSmokeColor(menu)
-    local color = Config.colors.color.TyreSmoke[menu.modIndex]
+    local colorData = require 'data.colors'.data
+    local color = colorData.TyreSmoke[menu.modIndex]
     if not color then return end
     local entity = cache.vehicle
     ToggleVehicleMod(entity, 20, true)
     SetVehicleTyreSmokeColor(entity, color.rgb[1], color.rgb[2], color.rgb[3])
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyXenonLightsColor(menu)
     local entity = cache.vehicle
     ToggleVehicleMod(entity, 22, true)
     SetVehicleXenonLightsColor(entity, menu.modIndex)
 end
 
----@param menu applyMod
+---@param menu applyColor
 function Vehicle.applyVehicleColor(menu)
     local entity = cache.vehicle
     local colorPrimary, colorSecondary = GetVehicleColours(entity)

@@ -11,6 +11,8 @@ repository 'Byte-Labs-Project/bl_customs'
 ui_page 'web/build/index.html'
 --ui_page 'http://localhost:5173/'
 
+dependency 'bl_bridge'
+
 client_scripts {
   "@bl_bridge/imports/client.lua",
   "client/init.lua"
@@ -28,13 +30,12 @@ server_scripts {
 shared_script '@ox_lib/init.lua'
 
 files {
-  'config.lua',
+  'data/*.lua',
   'client/modules/*.lua',
   'web/build/index.html',
   'web/build/**/*',
-  "data/carcols_gen9.meta",
-  "data/carmodcols_gen9.meta"
+  "data/chameleon/*.meta",
 }
 
-data_file "CARCOLS_GEN9_FILE" "data/carcols_gen9.meta"
-data_file "CARMODCOLS_GEN9_FILE" "data/carmodcols_gen9.meta"
+data_file "CARCOLS_GEN9_FILE" "data/chameleon/carcols_gen9.meta"
+data_file "CARMODCOLS_GEN9_FILE" "data/chameleon/carmodcols_gen9.meta"

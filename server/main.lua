@@ -1,6 +1,6 @@
 if not lib then return end
 
-local config = require 'config'
+local config = require 'data.config'
 local core = Framework.core
 
 lib.callback.register('bl_customs:canAffordMod', function(source, amount)

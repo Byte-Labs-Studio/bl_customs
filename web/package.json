@@ -2,6 +2,7 @@
   "name": "web",
   "homepage": "web/build",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "scripts": {
     "start": "vite",
@@ -10,19 +11,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/free-regular-svg-icons": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
-    "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.9",
-    "@vitejs/plugin-react": "^2.2.0",
-    "typescript": "^4.9.3",
-    "vite": "^3.2.4"
+    "@types/node": "^20.11.28",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
   }
 }

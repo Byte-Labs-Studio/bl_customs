@@ -1,6 +1,4 @@
 local lib_zones = lib.zones
-local config = require 'config'
-local locations = config.locations
 local core = Framework.core
 local polyzone = {
     pos = vector4(0),
@@ -49,6 +47,7 @@ local function onExit()
 end
 
 CreateThread(function()
+    local locations = require 'data.config'.locations
     for _, v in ipairs(locations) do
         local pos = v.pos
         local blip_data = v.blip

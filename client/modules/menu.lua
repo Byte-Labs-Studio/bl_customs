@@ -1,13 +1,15 @@
 local vehicle = require 'client.modules.vehicle'
-local Config = require 'config'
 local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
-local table_contain = lib.table.contains
+local lib_table = lib.table
+local table_contain = lib_table.contains
 local uiLoaded = false
+local store = require 'client.modules.store'
+
 ---comment
 ---@param menu {type: number, index: number}
 local function applyMod(menu)
-    local storedData = require 'client.modules.store'.stored
+    local storedData = store.stored
     local entity = cache.vehicle
     local type, index in menu
 
@@ -26,45 +28,43 @@ end
 ---comment
 ---@param menu {colorType: string, modIndex: number}
 local function applyColorMod(menu)
-    local selector = {
-        Primary = vehicle.applyVehicleColor,
-        Secondary = vehicle.applyVehicleColor,
-        Interior = vehicle.applyInteriorColor,
-        Wheels = vehicle.applyExtraColor,
-        Pearlescent = vehicle.applyExtraColor,
-        Dashboard = vehicle.applyDashboardColor,
-        Neon = vehicle.applyNeonColor,
-        ['Tyre Smoke'] = vehicle.applyTyreSmokeColor,
-        ['Xenon Lights'] = vehicle.applyXenonLightsColor,
-        ['Window Tint'] = vehicle.applyWindowsTint,
-        ['Neon Colors'] = vehicle.applyNeonColor,
-    }
-    local isSelector = selector[menu.colorType]
-    if not isSelector then return end
-    isSelector(menu)
+    local colors = require 'data.colors'
+    local selector = colors.functions[menu.colorType]
+    if not selector then return end
+    selector.setter(menu)
 end
+
+local function triggerSelector(prop, ...)
+    local category = require 'client.modules.filter'.named[store.menu]
+    local selector = category and category.selector
+    if not selector or not selector[prop] then return end
+    return selector[prop](...)
+end
+
 
 ---comment
 ---@param modIndex number
 local function handleMod(modIndex)
-    local store = require 'client.modules.store'
-    local modType = store.modType
+    local modType = store.modType ~= 'none' and store.modType
 
-    if modType == 'none' then return end
+    triggerSelector('onModSwitch', modType or store.menu, modIndex)
+    if not modType then return end
 
     store.stored.appliedMods = { modType = modType, mod = modIndex }
-    if store.menu == 'paint' then
+    if store.menuType == 'paint' then
         applyColorMod({ colorType = modType, modIndex = modIndex })
     else
-        applyMod({ type = store.menu == 'wheels' and 23 or Config.decals[modType].id, index = modIndex })
+        local decals = require 'data.decals'
+        local modType = store.menuType == 'wheels' and 23 or decals[modType] and decals[modType].id
+        if not modType then return end
+        applyMod({ type = modType, index = modIndex })
     end
 end
 
 local function resetLastMod()
-    local store = require 'client.modules.store'
     local storedData = store.stored
     if not storedData.boughtMods or storedData.appliedMods and storedData.appliedMods.modType ~= storedData.boughtMods.modType or storedData.appliedMods.mod ~= storedData.boughtMods.mod then
-        if store.menu == 'wheels' then
+        if store.menuType == 'wheels' then
             SetVehicleWheelType(cache.vehicle, storedData.currentWheelType)
         end
         handleMod(storedData.currentMod)
@@ -78,11 +78,39 @@ local function resetMenuData()
     camera.destroyCam()
     resetLastMod()
 
-    local store = require 'client.modules.store'
     store.menu = 'main'
+    store.menuType = ''
     store.modType = 'none'
     store.stored = {}
     store.preview = false
+end
+
+local function filterMods()
+    local categories = lib.load('client.modules.filter').filtered
+
+    local polyMods = poly.mods
+    if not poly.mods then
+        return categories
+    end
+
+    local filter = {}
+    for _, data in ipairs(categories) do
+
+        if polyMods then
+            local add = false
+            for _, mod in ipairs(poly.mods) do
+                if data.important or data.id == mod then
+                    add = true
+                end
+            end
+    
+            if add then
+                filter[#filter+1] = data
+            end
+        end
+    end
+    
+    return filter
 end
 
 ---comment
@@ -101,9 +129,7 @@ local function showMenu(show)
         if uiLoaded then return true end
     end)
 
-    if poly.mods then
-        SendReactMessage('setZoneMods', poly.mods)
-    end
+    SendReactMessage('setZoneMods', filterMods())
     SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
@@ -120,73 +146,42 @@ end
 ---@param type string
 ---@return table|nil
 local function getModType(type)
-    local selector = {
-        wheels = vehicle.getVehicleWheelsType,
-        decals = vehicle.getMods,
-        paint = vehicle.getVehicleColorsTypes,
-    }
-
-    local store = require 'client.modules.store'
-    return selector[store.menu] and selector[store.menu](type)
+    return triggerSelector('childOnSelect', type)
 end
 
 ---comment
 ---@param menu 'exit' | 'decals' | 'wheels' | 'paint' | 'preview'
 ---@return table|nil
 local function handleMainMenus(menu)
-    local selector = {
-        exit = function()
-            showMenu(false)
-            return true
-        end,
-        decals = vehicle.getVehicleDecals,
-        wheels = vehicle.getVehicleWheels,
-        paint = vehicle.getVehicleColors,
-        preview = function()
-            local store = require 'client.modules.store'
-            store.preview = not store.preview
-            local text = ''
-            if store.preview then
-                text = 'Preview Mode: On'
-                SetNuiFocus(true, false)
-                camera.destroyCam()
-            else
-                text = 'Preview Mode: Off'
-                SetNuiFocus(true, true)
-                camera.createMainCam()
-            end
-
-            lib.notify({ title = 'Customs', description = text, type = 'inform' })
-        end,
-    }
-
-    local selectorFun = selector[menu]
-    return selectorFun and selectorFun()
+    local category = require 'client.modules.filter'.named[menu]
+    local selector = category and category.selector
+    if not selector or not selector.onSelect then return end
+    return selector.onSelect(category)
 end
 
 ---comment
 ---@param data {type: string, isBack:boolean, clickedCard:string}
 ---@return table|nil
 local function handleMenuClick(data)
-    local menuType = data.type
-    local clickedCard = data.clickedCard
+    local cardType, clickedCard, isBack, menuType in data
     if clickedCard == nil then return end
+
     camera.switchCam()
-    if data.isBack then
+
+    if isBack then
         resetLastMod()
     end
-    if menuType == 'menu' then
-        local store = require 'client.modules.store'
-
+    if cardType == 'menu' then
         store.menu = clickedCard
-    elseif menuType == 'modType' then
-        local store = require 'client.modules.store'
-
-        store.modType = store.menu == 'paint' and
-            (table_contain(Config.colors.types, clickedCard) and clickedCard or store.modType) or clickedCard
+        store.menuType = menuType or store.menuType
+        store.modType = 'none'
+        return handleMainMenus(clickedCard)
+    elseif cardType == 'modType' then
+        local colorTypes = require 'client.modules.filter'.colorTypes
+        store.modType = store.menuType == 'paint' and (table_contain(colorTypes, clickedCard) and clickedCard or store.modType) or clickedCard
     end
 
-    return menuType == 'menu' and handleMainMenus(clickedCard) or getModType(clickedCard)
+    return getModType(clickedCard)
 end
 
 ---comment
@@ -197,7 +192,6 @@ local function removeMoney(amount)
 end
 
 local function buyMod(data)
-    local store = require 'client.modules.store'
     local storedData = store.stored
 
     if storedData.currentMod == data.mod then
@@ -210,7 +204,7 @@ local function buyMod(data)
     end
     storedData.boughtMods = { price = data.price, mod = data.mod, modType = store.modType }
     storedData.currentMod = data.mod
-    return true
+    return triggerSelector('childOnBuy', data.mod) or true
 end
 
 ---comment
@@ -221,7 +215,6 @@ local function toggleMod(data)
         lib.notify({ title = 'Customs', description = 'You\'re broke', type = 'warning' })
         return false
     end
-    local store = require 'client.modules.store'
     local mod, toggle in data
 
     if store.modType == 'Neon' then
@@ -230,7 +223,7 @@ local function toggleMod(data)
         ToggleVehicleMod(cache.vehicle, mod, toggle)
     end
 
-    return true
+    return triggerSelector('childOnToggle', mod, toggle) and true
 end
 
 RegisterNUICallback('hideFrame', function(_, cb)
@@ -253,8 +246,8 @@ RegisterNUICallback('buyMod', function(data, cb)
 end)
 
 RegisterNUICallback('customsLoaded', function(data, cb)
-    cb(1)
     uiLoaded = true
+    cb(require 'client.modules.filter'.colorTypes)
 end)
 
 RegisterNUICallback('toggleMod', function(data, cb)

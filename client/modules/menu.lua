@@ -37,7 +37,8 @@ end
 local function triggerSelector(prop, ...)
     local category = require 'client.modules.filter'.named[store.menu]
     local selector = category and category.selector
-    if not selector or not selector[prop] then return end
+    if not selector or not selector[prop] then return false end
+
     return selector[prop](...)
 end
 
@@ -143,13 +144,6 @@ local function showMenu(show)
 end
 
 ---comment
----@param type string
----@return table|nil
-local function getModType(type)
-    return triggerSelector('childOnSelect', type)
-end
-
----comment
 ---@param menu 'exit' | 'decals' | 'wheels' | 'paint' | 'preview'
 ---@return table|nil
 local function handleMainMenus(menu)
@@ -181,7 +175,8 @@ local function handleMenuClick(data)
         store.modType = store.menuType == 'paint' and (table_contain(colorTypes, clickedCard) and clickedCard or store.modType) or clickedCard
     end
 
-    return getModType(clickedCard)
+    local success, result = pcall(triggerSelector, 'childOnSelect', clickedCard)
+    return success and result or nil
 end
 
 ---comment
@@ -204,7 +199,9 @@ local function buyMod(data)
     end
     storedData.boughtMods = { price = data.price, mod = data.mod, modType = store.modType }
     storedData.currentMod = data.mod
-    return triggerSelector('childOnBuy', data.mod) or true
+
+    local success, result = pcall(triggerSelector, 'childOnBuy', data.mod)
+    return success and result or true
 end
 
 ---comment
@@ -223,7 +220,8 @@ local function toggleMod(data)
         ToggleVehicleMod(cache.vehicle, mod, toggle)
     end
 
-    return triggerSelector('childOnToggle', mod, toggle) and true
+    local success, result = pcall(triggerSelector, 'childOnToggle', mod, toggle)
+    return success and result or true
 end
 
 RegisterNUICallback('hideFrame', function(_, cb)

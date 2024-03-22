@@ -11,8 +11,8 @@ function Utils.SendReactMessage(action, data)
   })
   if action ~= 'setVisible' then return end
 
-  SetNuiFocusKeepInput(data)
-  SetNuiFocus(data, data)
+  SetNuiFocusKeepInput(false)
+  SetNuiFocus(data, false)
 end
 
 function Utils.updateCard(id, update)

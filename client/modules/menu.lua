@@ -1,4 +1,3 @@
-local vehicle = require 'client.modules.vehicle'
 local poly = require 'client.modules.polyzone'
 local camera = require 'client.modules.camera'
 local lib_table = lib.table
@@ -6,33 +5,6 @@ local table_contain = lib_table.contains
 local uiLoaded = false
 local store = require 'client.modules.store'
 
----comment
----@param menu {type: number, index: number}
-local function applyMod(menu)
-    local storedData = store.stored
-    local entity = cache.vehicle
-    local type, index in menu
-
-    if type == 51 then -- plate index
-        SetVehicleNumberPlateTextIndex(entity, index)
-    elseif type == 24 then
-        SetVehicleLivery(entity, index)
-    else
-        SetVehicleMod(entity, type, index, storedData.customTyres)
-    end
-
-    --if menu.type == 14 then -- do a special thing if you selected a mod
-    --end
-end
-
----comment
----@param menu {colorType: string, modIndex: number}
-local function applyColorMod(menu)
-    local colors = require 'data.colors'
-    local selector = colors.functions[menu.colorType]
-    if not selector then return end
-    selector.setter(menu)
-end
 
 local function triggerSelector(prop, ...)
     local category = require 'client.modules.filter'.named[store.menu]
@@ -42,7 +14,6 @@ local function triggerSelector(prop, ...)
     return selector[prop](...)
 end
 
-
 ---comment
 ---@param modIndex number
 local function handleMod(modIndex)
@@ -51,14 +22,24 @@ local function handleMod(modIndex)
     triggerSelector('onModSwitch', modType or store.menu, modIndex)
     if not modType then return end
 
-    store.stored.appliedMods = { modType = modType, mod = modIndex }
-    if store.menuType == 'paint' then
-        applyColorMod({ colorType = modType, modIndex = modIndex })
-    else
-        local decals = require 'data.decals'
-        local modType = store.menuType == 'wheels' and 23 or decals[modType] and decals[modType].id
-        if not modType then return end
-        applyMod({ type = modType, index = modIndex })
+    local isWheel = store.menuType == 'wheels'
+    local isPaint = store.menuType == 'paint'
+    local modData = isWheel and require 'data.wheels'[modType] or isPaint and require 'data.colors'.functions[modType] or require 'data.decals'[modType]
+    local vehicle = cache.vehicle
+
+    local storedData = store.stored
+    storedData.appliedMods = { modType = modType, mod = modIndex }
+
+    if not modData then return end
+
+    local onSelect = modData.onSelect
+    if onSelect then
+        local success, result = pcall(onSelect, vehicle, modIndex)
+        return not success or not result
+    end
+
+    if not isPaint then
+        SetVehicleMod(vehicle, isWheel and 23 or modData.id, modIndex, storedData.customTyres)
     end
 end
 
@@ -167,7 +148,7 @@ local function handleMenuClick(data)
     end
     if cardType == 'menu' then
         store.menu = clickedCard
-        store.menuType = menuType or 'main'
+        store.menuType = not isBack and (menuType or 'main') or store.menuType
         store.modType = 'none'
         return handleMainMenus(clickedCard)
     elseif cardType == 'modType' then
@@ -213,15 +194,22 @@ local function toggleMod(data)
         return false
     end
     local mod, toggle in data
+    local modType = store.modType
+    local modData = store.menuType == 'wheels' and require 'data.wheels'[modType] or store.menuType == 'paint' and require 'data.colors'.functions[modType] or require 'data.decals'[modType]
+    local vehicle = cache.vehicle
 
-    if store.modType == 'Neon' then
-        vehicle.enableNeonColor({ modIndex = mod, toggle = toggle })
-    else
-        ToggleVehicleMod(cache.vehicle, mod, toggle)
+    if modData then
+        local onToggle = modData.onToggle
+        if onToggle then
+            local success, result = pcall(onToggle, vehicle, mod, toggle)
+            return not success or not result
+        end
     end
 
+    ToggleVehicleMod(vehicle, mod, toggle)
+
     local success, result = pcall(triggerSelector, 'childOnToggle', mod, toggle)
-    return success and result or true
+    return not success or not result
 end
 
 RegisterNUICallback('hideFrame', function(_, cb)

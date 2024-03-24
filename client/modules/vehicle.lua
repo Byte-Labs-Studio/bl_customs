@@ -93,18 +93,10 @@ function Vehicle.getMod(type, wheelData)
         end
     end
 
-    local data = mod.data
-    if data then
-        mods = table_deepcopy(data.mods)
-        local currentMod = data.getter(vehicle)
-        stored.currentMod = currentMod
-        for _, v in ipairs(mods) do
-            if v.id == currentMod then
-                v.selected = true
-                v.applied = true
-            end
-        end
-        return mods
+    local onClick = mod.onClick
+    if onClick then
+        local success, result = pcall(onClick, vehicle, stored)
+        return success and result or {}
     end
 
     local id = 1
@@ -150,7 +142,7 @@ function Vehicle.getVehicleDecals()
     local vehicle = cache.vehicle
 
     for mod, modData in pairs(require 'data.decals') do
-        local blacklist, id, toggle, menuId in modData
+        local blacklist, id, toggle, menuId, custom in modData
         if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) and menuId == currentMenu then
 
             local add = false
@@ -162,7 +154,7 @@ function Vehicle.getVehicleDecals()
                 selected = appliedMod or nil
             }
 
-            if modCount(vehicle, id) > 0 then
+            if custom or modCount(vehicle, id) > 0 then
                 add = true
             elseif toggle then
                 modCard.id = id
@@ -328,71 +320,43 @@ function Vehicle.getVehicleColorTypes(modType)
     if selector.cam then
         createCam(selector.cam)
     end
-    return selector.getter()
+    return selector.onClick()
 end
 
 -- mod index application
 
 ---@alias applyColor {modIndex: number, colorType?: string}
 
----@param menu applyColor
-function Vehicle.applyInteriorColor(menu)
-    SetVehicleInteriorColor(cache.vehicle, menu.modIndex)
+---@param modIndex number
+function Vehicle.applyExtraColor(vehicle, modIndex)
+    local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+    pearlescentColor = store.modType == 'Pearlescent' and modIndex or pearlescentColor
+    wheelColor = store.modType == 'Wheels' and modIndex or wheelColor
+    SetVehicleExtraColours(vehicle, pearlescentColor, wheelColor)
 end
 
----@param menu applyColor
-function Vehicle.applyExtraColor(menu)
-    local entity = cache.vehicle
-    local pearlescentColor, wheelColor = GetVehicleExtraColours(entity)
-    pearlescentColor = menu.colorType == 'Pearlescent' and menu.modIndex or pearlescentColor
-    wheelColor = menu.colorType == 'Wheels' and menu.modIndex or wheelColor
-    SetVehicleExtraColours(entity, pearlescentColor, wheelColor)
-end
-
----@param menu applyColor
-function Vehicle.applyDashboardColor(menu)
-    SetVehicleDashboardColor(cache.vehicle, menu.modIndex)
-end
-
----@param menu applyColor
-function Vehicle.enableNeonColor(menu)
-    SetVehicleNeonLightEnabled(cache.vehicle, menu.modIndex, menu.toggle)
-end
-
----@param menu applyColor
-function Vehicle.applyWindowsTint(menu)
-    SetVehicleWindowTint(cache.vehicle, menu.modIndex)
-end
-
----@param menu applyColor
-function Vehicle.applyNeonColor(menu)
-    SetVehicleNeonLightsColor_2(cache.vehicle, menu.modIndex)
-end
-
----@param menu applyColor
-function Vehicle.applyTyreSmokeColor(menu)
+---@param modIndex number
+function Vehicle.applyTyreSmokeColor(vehicle, modIndex)
     local colorData = require 'data.colors'.data
-    local color = colorData.TyreSmoke[menu.modIndex]
+    local color = colorData.TyreSmoke[modIndex]
     if not color then return end
-    local entity = cache.vehicle
-    ToggleVehicleMod(entity, 20, true)
-    SetVehicleTyreSmokeColor(entity, color.rgb[1], color.rgb[2], color.rgb[3])
+
+    ToggleVehicleMod(vehicle, 20, true)
+    SetVehicleTyreSmokeColor(vehicle, color.rgb[1], color.rgb[2], color.rgb[3])
 end
 
----@param menu applyColor
-function Vehicle.applyXenonLightsColor(menu)
-    local entity = cache.vehicle
-    ToggleVehicleMod(entity, 22, true)
-    SetVehicleXenonLightsColor(entity, menu.modIndex)
+---@param modIndex number
+function Vehicle.applyXenonLightsColor(vehicle, modIndex)
+    ToggleVehicleMod(vehicle, 22, true)
+    SetVehicleXenonLightsColor(vehicle, modIndex)
 end
 
----@param menu applyColor
-function Vehicle.applyVehicleColor(menu)
-    local entity = cache.vehicle
-    local colorPrimary, colorSecondary = GetVehicleColours(entity)
-    local primaryColor = menu.colorType == 'Primary' and menu.modIndex or colorPrimary
-    local secondaryColor = menu.colorType == 'Secondary' and menu.modIndex or colorSecondary
-    SetVehicleColours(entity, primaryColor, secondaryColor)
+---@param modIndex number
+function Vehicle.applyVehicleColor(vehicle, modIndex)
+    local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
+    local primaryColor = store.modType == 'Primary' and modIndex or colorPrimary
+    local secondaryColor = store.modType == 'Secondary' and modIndex or colorSecondary
+    SetVehicleColours(vehicle, primaryColor, secondaryColor)
 end
 
 return Vehicle

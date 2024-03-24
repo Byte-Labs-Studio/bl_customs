@@ -10,9 +10,9 @@ const handleClick = async (
     const isBackButton = targetMenu === 'back'
     const card = menu.card
     if (isBackButton && card.previous === 'main') {
-        if (card.current === 'main') return fetchNui<MenuProps['data']>('setMenu', { clickedCard: 'exit', cardType: 'menu' })
-
-        setMenuData({...menu, data: menu.defaultMenu, type: 'menu', card: {current: 'main', previous: 'main'}, currentMenu: 'main'})
+        if (card.current === 'main') fetchNui<MenuProps['data']>('setMenu', { clickedCard: 'exit', cardType: 'menu' })
+        else setMenuData({...menu, data: menu.defaultMenu, type: 'menu', card: {current: 'main', previous: 'main'}, currentMenu: 'main'})
+        return
     } else {
         const clickedCard = isBackButton ? card.previous : targetMenu
         const type = menu.mainMenus.includes(clickedCard) ? 'menu' : typeof targetMenu === 'number' ? 'modIndex' : 'modType'

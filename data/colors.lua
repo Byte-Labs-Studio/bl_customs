@@ -1,54 +1,57 @@
 local vehicle = require 'client.modules.vehicle'
-local applyVehicleColor, applyInteriorColor, applyExtraColor, applyDashboardColor, applyNeonColor, applyTyreSmokeColor, applyXenonLightsColor, applyWindowsTint,--setters
-getPaintTypes, getAllColors, getNeons, getXenonColor, getTyreSmokes, getWindowsTint in vehicle --getters
+local applyVehicleColor, applyExtraColor, applyTyreSmokeColor, applyXenonLightsColor,--onSelects
+getPaintTypes, getAllColors, getNeons, getXenonColor, getTyreSmokes, getWindowsTint in vehicle --onClicks
 
 return {
     functions = {
         Primary = {
-            getter = getPaintTypes,
-            setter = applyVehicleColor
+            onClick = getPaintTypes,
+            onSelect = applyVehicleColor
         },
         Secondary = {
-            getter = getPaintTypes,
-            setter = applyVehicleColor
+            onClick = getPaintTypes,
+            onSelect = applyVehicleColor
         },
         Dashboard = {
             cam = { angle = vec2(0.375, 25.875), off = vec3(0.199988, 0.000024, 0.800000) },
-            getter = getAllColors,
-            setter = applyDashboardColor
+            onClick = getAllColors,
+            onSelect = SetVehicleDashboardColor
         },
         Interior = {
-            getter = getAllColors,
-            setter = applyInteriorColor
+            onClick = getAllColors,
+            onSelect = SetVehicleInteriorColor
         },
         Wheels = {
             cam = { angle = vec2(87.125, 2.375), off = vec3(-1.000012, 2.100049, 0.100000) },
-            getter = getAllColors,
-            setter = applyExtraColor
+            onClick = getAllColors,
+            onSelect = applyExtraColor
         },
         Pearlescent = {
-            getter = getAllColors,
-            setter = applyExtraColor
+            onClick = getAllColors,
+            onSelect = applyExtraColor
         },
         Neon = {
-            getter = getNeons,
-            setter = applyNeonColor
+            onToggle = function(entity, modIndex, toggle)
+                SetVehicleNeonLightEnabled(entity, modIndex, toggle)
+            end,
+            onClick = getNeons,
+            onSelect = SetVehicleNeonLightsColor_2
         },
         ['Tyre Smoke'] = {
-            getter = getTyreSmokes,
-            setter = applyTyreSmokeColor
+            onClick = getTyreSmokes,
+            onSelect = applyTyreSmokeColor
         },
         ['Xenon Lights'] = {
-            getter = getXenonColor,
-            setter = applyXenonLightsColor
+            onClick = getXenonColor,
+            onSelect = applyXenonLightsColor
         },
         ['Window Tint'] = {
-            getter = getWindowsTint,
-            setter = applyWindowsTint
+            onClick = getWindowsTint,
+            onSelect = SetVehicleWindowTint
         },
         ['Neon Colors'] = {
-            getter = getAllColors,
-            setter = applyNeonColor
+            onClick = getAllColors,
+            onSelect = SetVehicleNeonLightsColor_2
         }
     },
     paints = {
@@ -64,7 +67,6 @@ return {
             { label = 'Right ', id = 1,            price = 200,     toggle = true },
             { label = 'Front ', id = 2,            price = 200,     toggle = true },
             { label = 'Back',   id = 3,            price = 200,     toggle = true },
-            { label = 'Colors', id = 'Neon Colors' },
         },
         WindowsTint = {
             { price = 200, label = "Default",    id = 0 },

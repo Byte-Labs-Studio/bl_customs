@@ -283,7 +283,10 @@ return {
         cam = {
             angle = vec2(127.125, 33.0),
             off = vec3(-3.200000, 3.400000, 2.100000)
-        }
+        },
+        onSelect = function(vehicle, index)
+            SetVehicleLivery(vehicle, index)
+        end,
     },
     ['Plate holder'] = {
         menuId = 'decals',
@@ -352,14 +355,15 @@ return {
     ['Plate Index'] = {
         menuId = 'decals',
         id = 51,
-        price = 2000,
         cam = {
             angle = vec2(178.62, 17.25),
             off = vec3(-2.900037, 0.000049, 0.300000)
         },
-        data = {
-            getter = GetVehicleNumberPlateTextIndex,
-            mods = {
+        onSelect = function(vehicle, index)
+            SetVehicleNumberPlateTextIndex(vehicle, index)
+        end,
+        onClick = function(vehicle, stored)
+            local mods = {
                 { label = 'Blue/White',   id = 0, price = 200 },
                 { label = 'Yellow/black', id = 1, price = 200 },
                 { label = 'Yellow/Blue',  id = 2, price = 200 },
@@ -367,7 +371,41 @@ return {
                 { label = 'Blue/White3',  id = 4, price = 200 },
                 { label = 'Yankton',      id = 5, price = 200 },
             }
-        }
+
+            local currentMod = GetVehicleNumberPlateTextIndex(vehicle)
+            stored.currentMod = currentMod
+            for _, v in ipairs(mods) do
+                if v.id == currentMod then
+                    v.selected = true
+                    v.applied = true
+                end
+            end
+            return mods
+        end,
+    },
+    Extras = {
+        menuId = 'decals',
+        custom = true,
+        onToggle = function(vehicle, index, toggle)
+            SetVehicleExtra(vehicle, index, not toggle)
+        end,
+        onClick = function(vehicle)
+            local mods = {}
+            local count = 0
+            for extra = 0, 20 do
+                if DoesExtraExist(vehicle, extra) then
+                    count += 1
+                    mods[count] = {
+                        label = ('Extra %s'):format(extra),
+                        id = extra,
+                        price = 200,
+                        applied = IsVehicleExtraTurnedOn(vehicle, extra),
+                        toggle = true
+                    }
+                end
+            end
+            return mods
+        end,
     },
     ['Gearbox'] = {
         menuId = 'performance',

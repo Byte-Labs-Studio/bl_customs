@@ -19,13 +19,13 @@ return {
                     {id = 'menu1', label = 'this is a menu'}
                 }
             end,
-            childOnBuy = function(modType) -- this will work if mod id is a number such '2000' 
+            childOnBuy = function(modType) -- trigger on mod buy, this will work if mod id is a number such '2000' 
                 if modType == 2000 then -- here we listen to child item
                     print('setted mod')
                     return true -- return true to set check icon
                 end
             end,
-            childOnSelect = function(modType) -- this will work if mod id is a string such 'menu1'
+            childOnSelect = function(modType) -- trigger on mod select of the current menu, this will work if mod id is a string such 'menu1'
                 if modType == 'menu1' then -- here we will create submenu for 'menu1', NOTE (currently we don't support menu inside submenu, you will get issue if you try to get back to previous)
                     return {
                         {id = 2000, label = 'this is a mod'},

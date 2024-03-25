@@ -378,6 +378,7 @@ return {
                 if v.id == currentMod then
                     v.selected = true
                     v.applied = true
+                    break
                 end
             end
             return mods

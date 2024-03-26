@@ -390,6 +390,13 @@ return {
         onToggle = function(vehicle, index, toggle)
             SetVehicleExtra(vehicle, index, not toggle)
         end,
+        canInteract = function(vehicle)
+            for extra = 0, 20 do
+                if DoesExtraExist(vehicle, extra) then
+                    return true
+                end
+            end
+        end,
         onClick = function(vehicle)
             local mods = {}
             local count = 0

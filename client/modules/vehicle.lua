@@ -142,9 +142,16 @@ function Vehicle.getVehicleDecals()
     local vehicle = cache.vehicle
 
     for mod, modData in pairs(require 'data.decals') do
-        local blacklist, id, toggle, menuId, custom in modData
-        if (not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) and menuId == currentMenu then
+        local blacklist, id, toggle, menuId, custom, canInteract in modData
+        local canInteractMenu = true
+        if canInteract then
+            local success, resp = pcall(canInteract, vehicle)
+            if not success or not resp then
+                canInteractMenu = false
+            end
+        end
 
+        if canInteractMenu and ((not blacklist or (not isVehicleBlacklist(vehicle, blacklist))) and menuId == currentMenu) then
             local add = false
             local appliedMod = mod == modType
             if appliedMod then found = true end

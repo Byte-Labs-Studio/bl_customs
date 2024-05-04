@@ -72,14 +72,20 @@ const MainContainer: React.FC = () => {
         icon: selectedData.icon,
         menuType: selectedData.menuType,
       });
-      setCardsCount({ total: menu.data.length, current: 1 });
     }
-  }, [menu, setMenuData, setSelected, setCardsCount]);
+  }, [menu, setMenuData, setSelected]);
 
   const RenderCards = useMemo(() => {
+    const hiddenItemsCount = menu.data.filter(value => value.hide).length;
+
     return menu.data.map((value, index) => {
       if (!value.hide) {
         let label = value.label || value.id;
+
+        if (value.selected) {
+          setCardsCount({ total: menu.data.length - hiddenItemsCount, current: (index - hiddenItemsCount) + 1 });
+        }
+
         return (
           <Card
             key={index}

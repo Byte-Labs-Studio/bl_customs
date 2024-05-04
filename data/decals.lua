@@ -423,6 +423,7 @@ return {
             SetVehicleNumberPlateTextIndex(vehicle, index)
         end,
         onClick = function(vehicle, stored)
+            local gameBuild = GetGameBuildNumber()
             local mods = {
                 { label = 'Blue/White',   id = 0, price = 200 },
                 { label = 'Yellow/black', id = 1, price = 200 },
@@ -432,6 +433,16 @@ return {
                 { label = 'Yankton',      id = 5, price = 200 },
             }
 
+            if gameBuild > 2944 then
+                mods[#mods + 1] = { label = 'eCola', id = 6, price = 200 }
+                mods[#mods + 1] = { label = 'Las Venturas', id = 7, price = 200 }
+                mods[#mods + 1] = { label = 'Liberty City', id = 8, price = 200 }
+                mods[#mods + 1] = { label = 'LS Car Meet', id = 9, price = 200 }
+                mods[#mods + 1] = { label = 'Panic', id = 10, price = 200 }
+                mods[#mods + 1] = { label = 'Pounders', id = 11, price = 200 }
+                mods[#mods + 1] = { label = 'Sprunk', id = 12, price = 200 }
+            end
+            
             local currentMod = GetVehicleNumberPlateTextIndex(vehicle)
             stored.currentMod = currentMod
             for _, v in ipairs(mods) do

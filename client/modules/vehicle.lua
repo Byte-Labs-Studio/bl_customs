@@ -110,8 +110,9 @@ function Vehicle.getMod(type, wheelData)
         local index = isWheel and 0 or currentMod
         local applied = i == index or nil
         local customLabel = mod.labels and mod.labels[i]
+        
         mods[id] = {
-            label = customLabel and customLabel.label or (text ~= 'NULL' and label or text),
+            label = customLabel and customLabel.label or label,
             id = i,
             selected = applied,
             applied = not isWheel and applied,

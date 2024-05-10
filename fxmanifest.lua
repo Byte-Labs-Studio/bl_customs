@@ -4,7 +4,7 @@ lua54 'yes'
 game 'gta5'
 
 author 'Byte Labs'
-version '2.0.1'
+version '2.2.1'
 repository 'Byte-Labs-Project/bl_customs'
 
 dependency 'bl_bridge'

@@ -81,7 +81,6 @@ return {
                     SetVehicleEngineHealth(vehicle, 1000.0)
                     SetVehicleFixed(vehicle)
                     updateCard('repair', {hide = true}) -- let hide the card after repairing
-                    updateCard('decals', {hide = false})
                     needRepair = false
                     lib.notify({ title = 'Customs', description = 'vehicle fixed!', type = 'success' })
                     data.price = 0 -- reset the price

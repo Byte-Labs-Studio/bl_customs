@@ -1,6 +1,7 @@
 local vehicle = require 'client.modules.vehicle'
 local getVehicleDecals, getVehicleWheels, getVehicleColors, getMod, getVehicleWheelType, getVehicleColorTypes in vehicle
 local updateCard = require 'client.modules.utils'.updateCard
+local needRepair = false
 
 return {
     {
@@ -51,6 +52,7 @@ return {
         selected = true,
         selector = {
             onOpen = function(data) -- return self like (data.price, data.icon),  for ex here im calculating vehicle damage
+                needRepair = false
                 data.hide = false
                 local vehicle = cache.vehicle
                 local engine, body = GetVehicleEngineHealth(vehicle), GetVehicleBodyHealth(vehicle)
@@ -64,6 +66,8 @@ return {
                 data.price = math.floor(price) -- we update the price to show on UI
                 if data.price == 0 then
                     data.hide = true --if vehicle has no damage, we hide the menu
+                else
+                    needRepair = true
                 end
             end,
             onSelect = function(data)
@@ -77,6 +81,8 @@ return {
                     SetVehicleEngineHealth(vehicle, 1000.0)
                     SetVehicleFixed(vehicle)
                     updateCard('repair', {hide = true}) -- let hide the card after repairing
+                    updateCard('decals', {hide = false})
+                    needRepair = false
                     lib.notify({ title = 'Customs', description = 'vehicle fixed!', type = 'success' })
                     data.price = 0 -- reset the price
                 end
@@ -114,7 +120,14 @@ return {
         icon = 'screwdriver-wrench',
         selector = {
             onSelect = getVehicleDecals,
-            childOnSelect = getMod,
+            childOnSelect = function(type)
+                if type == 'Extras' and needRepair then
+                    lib.notify({ title = 'Customs', description = 'Please repair your car!', type = 'inform' })
+                    return
+                end
+                
+                return getMod(type)
+            end,
         }
     },
     {

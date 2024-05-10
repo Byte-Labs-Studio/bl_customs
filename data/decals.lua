@@ -458,7 +458,9 @@ return {
         menuId = 'decals',
         custom = true,
         onToggle = function(vehicle, index, toggle)
+            SetVehicleAutoRepairDisabled(vehicle, false)
             SetVehicleExtra(vehicle, index, not toggle)
+            SetVehicleAutoRepairDisabled(vehicle, true)
         end,
         canInteract = function(vehicle)
             for extra = 0, 20 do

@@ -371,9 +371,7 @@ CreateThread(function()
     while true do Wait(1000)
         local vehicles = GetGamePool("CVehicle")
         for _, v in pairs(vehicles) do
-            if v ~= GetVehiclePedIsIn(PlayerPedId(), false) then
-                SetVehicleAutoRepairDisabled(v, true)
-            else
+            if not v ~= GetVehiclePedIsIn(PlayerPedId(), false) then
                 SetVehicleAutoRepairDisabled(v, false)
             end
         end

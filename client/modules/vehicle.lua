@@ -367,4 +367,17 @@ function Vehicle.applyVehicleColor(vehicle, modIndex)
     SetVehicleColours(vehicle, primaryColor, secondaryColor)
 end
 
+CreateThread(function()
+    while true do Wait(1000)
+        local vehicles = GetGamePool("CVehicle")
+        for _, v in pairs(vehicles) do
+            if v ~= GetVehiclePedIsIn(PlayerPedId(), false) then
+                SetVehicleAutoRepairDisabled(v, true)
+            else
+                SetVehicleAutoRepairDisabled(v, false)
+            end
+        end
+    end
+end)
+
 return Vehicle

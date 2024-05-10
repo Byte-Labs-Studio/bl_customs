@@ -109,7 +109,7 @@ local function showMenu(show)
 
     lib.waitFor(function()
         if uiLoaded then return true end
-    end)
+    end, 'Couldn\'t load UI, did you download release?', 5000)
 
     SendReactMessage('setZoneMods', filterMods())
     SendReactMessage('setVisible', true)

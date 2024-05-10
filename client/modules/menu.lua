@@ -115,7 +115,6 @@ local function showMenu(show)
     SendReactMessage('setVisible', true)
     local coords = poly.pos
     SetVehicleEngineOn(entity, true, true, false)
-    SetVehicleAutoRepairDisabled(entity, true)
     SetVehicleModKit(entity, 0)
     SetEntityHeading(entity, coords.w)
     SetEntityCoords(entity, coords.x, coords.y, coords.z)

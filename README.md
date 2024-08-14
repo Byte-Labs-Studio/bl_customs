@@ -2,6 +2,8 @@
 # Description
 bl_customs is a vehicle customization script built using React and TypeScript.
 
+![Preview](preview.png)
+
 # Requirement
 ### [ox_lib](https://github.com/overextended/ox_lib)
 ### [bl_bridge](https://github.com/Byte-Labs-Project/bl_bridge)
